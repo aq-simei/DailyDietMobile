@@ -4,12 +4,15 @@ import { twMerge } from 'tailwind-merge';
 export const SafeScreenContent = ({
   children,
   className,
+  hasHeader,
 }: {
   children: React.ReactNode;
   className?: string;
+  hasHeader?: boolean;
 }) => {
   return (
-    <SafeAreaView className={twMerge('mx-4 flex w-auto flex-1 bg-brick-red-200', className)}>
+    <SafeAreaView
+      className={twMerge('mx-6 flex w-auto flex-1', hasHeader ? 'mt-16' : '', className)}>
       {children}
     </SafeAreaView>
   );
