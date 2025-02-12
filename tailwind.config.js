@@ -1,14 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./App.{js,ts,tsx}', './src/components/**/*.{js,ts,tsx}'],
+  content: ['./App.{js,ts,tsx}', './src/**/*.{js,ts,tsx}'],
 
   presets: [require('nativewind/preset')],
   theme: {
-    fontFamily: {
-      bold: 'Nunito_700Bold',
-      semibold: 'Nunito_600SemiBold',
-      sans: ['Nunito_400Regular'],
-    },
     extend: {
       fontFamily: {
         nunito: ['Nunito_400Regular'],
@@ -21,11 +16,11 @@ module.exports = {
           900: '#762532',
           800: '#892834',
           700: '#a32d38',
-          600: '#bf3b44',
+          600: '#bf3b44', // main
           500: '#d75c5e',
-          400: '#e58887',
+          400: '#e58887', // mid
           300: '#efb3b2',
-          200: '#f6d6d5',
+          200: '#f6d6d5', // light
           100: '#fbe9e8',
           50: '#fdf4f3',
         },
@@ -44,7 +39,7 @@ module.exports = {
         },
         base: {
           700: '#FFFFFF',
-          600: '#FAFAFA',
+          600: '#EFF0F0',
           500: '#DDDEDF',
           400: '#DDDEDF',
           300: '#B9BBBC',
@@ -66,5 +61,6 @@ module.exports = {
       },
     },
   },
+
   plugins: [],
 };
