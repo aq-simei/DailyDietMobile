@@ -3,6 +3,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from '@screens/Home/index';
 import { Overview } from '@screens/Overview/index';
+import { HomeStackParamList } from '@src/@types/navigation';
 import { NewMeal } from '@src/Screens/NewMeal';
 import { ArrowLeft } from 'lucide-react-native';
 import { Image, TouchableOpacity, View } from 'react-native';
@@ -51,7 +52,7 @@ export const Routes = () => {
           cardOverlayEnabled: true,
           headerLeft: () => (
             <TouchableOpacity className="ml-6" onPress={goBack}>
-              <ArrowLeft color={'#000000'} size={18} strokeWidth={4} />
+              <ArrowLeft size={18} strokeWidth={4} className="color-black" />
             </TouchableOpacity>
           ),
         }}

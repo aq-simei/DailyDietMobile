@@ -2,9 +2,9 @@ import { SafeScreenContent } from '@components/SafeScreenContent/SafeScreenConte
 import { Colors } from '@constants/Colors';
 import { mealData } from '@constants/dataMeals';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import { Card } from '@src/Components/Card/Card';
-import { axiosInstance } from '@src/api/axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, CircleAlert, CircleCheck, Plus } from 'lucide-react-native';
@@ -13,10 +13,7 @@ import Animated, { SlideInLeft } from 'react-native-reanimated';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
-  const requestUserData = async () => {
-    const response = await axiosInstance.get(`/auth/user/joe@mail.com`);
-    console.log(response.data);
-  };
+  // const { login } = useLogin();
   return (
     <Animated.View entering={SlideInLeft.duration(1000)} className="flex-1">
       <SafeScreenContent hasHeader>
@@ -38,7 +35,7 @@ const Home = () => {
           <Text className="font-nunito-semibold">Meals</Text>
           <Button
             className="w-full flex-row items-center justify-center rounded-lg bg-base-50 p-4"
-            onPress={() => requestUserData()}>
+            onPress={() => navigate('NewMeal')}>
             <Plus color={Colors.base[700]} strokeWidth={2} size={24} />
             <Text className="font-nunito-bold text-lg text-base-700">Add meal</Text>
           </Button>
