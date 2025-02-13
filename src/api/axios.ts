@@ -22,8 +22,6 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log('Full Request URL:', `${config.baseURL}${config.url}`);
-    console.log('Request Headers:', config.headers);
     return config;
   },
   (error) => {
@@ -43,15 +41,10 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.error('Response Error Data:', error.response.data);
-      console.error('Response Error Status:', error.response.status);
-      console.error('Response Error Headers:', error.response.headers);
     } else if (error.request) {
       // The request was made but no response was received
-      console.error('No Response Received:', error.request);
     } else {
       // Something happened in setting up the request that triggered an Error
-      console.error('Error Message:', error.message);
     }
     return Promise.reject(error);
   }
