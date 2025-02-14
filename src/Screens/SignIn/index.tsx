@@ -1,56 +1,112 @@
 import Logo from '@assets/Logo.svg';
 import { SafeScreenContent } from '@components/SafeScreenContent/SafeScreenContent';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { AppStackParamList } from '@src/@types/navigation';
+import { AppStackParamList, AuthStackParamList } from '@src/@types/navigation';
+import { Button } from '@src/Components/Button/Button';
+import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
+import { Colors } from '@src/Constants/Colors';
+import { useLogin } from '@src/Hooks/useLogin';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { TextInput, View, Text, TouchableOpacity } from 'react-native';
+import { LucideSquareCheckBig, Square } from 'lucide-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { toast } from 'sonner-native';
+import * as SecureStorage from 'expo-secure-store';
+import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigation = useNavigation<NavigationProp<AppStackParamList>>();
+  const [keepSignIn, setKeepSignIn] = useState(false);
+  const appNav = useNavigation<NavigationProp<AppStackParamList>>();
+  const { login, success, token, error, isLoading } = useLogin({
+    onSuccessCallback: (data: LoginResponseDTO) => {
+      toast.info('Login Success');
+      SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
+      appNav.navigate('App');
+    },
+    onErrorCallback: () => toast.error('Login Failed'),
+  });
+  const emailRefInput = React.useRef('');
+  const passwordRefInput = React.useRef('');
+  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const handleNavigateSignUp = () => {
+    navigation.navigate('SignUp');
+  };
 
-  // const handleSignIn = () => {
-  //   navigation.navigate('App');
-  // };
+  const handleBiometricLogin = async () => {
+    try {
+      const authResult = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Authenticate to login',
+        cancelLabel: 'Cancel',
+        fallbackLabel: 'Use your password',
+        requireConfirmation: false,
+      });
+      if (authResult.success) {
+        setKeepSignIn(!keepSignIn);
+        toast.success('Biometric authentication success');
+      }
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
+
+  const handleLogin = useCallback(() => {
+    // Do something with email and password
+    login({ email: emailRefInput.current, password: passwordRefInput.current });
+  }, []);
 
   return (
     <SafeScreenContent>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" backgroundColor="transparent" translucent />
       <View className="flex-1 items-center justify-center p-5">
         <View className="mb-10 items-center">
           <Logo width={80} height={40} />
-          <Text className="mt-2 text-2xl font-bold">Welcome back!</Text>
+          <Text className="mt-2 font-nunito-bold text-2xl">Welcome back!</Text>
         </View>
-        <Text className="mb-5 text-center text-lg"> Sign in to continue</Text>
-        <TextInput
-          className="mb-4 h-12 w-full rounded-md border border-gray-300 bg-white px-4"
+        <Text className="mb-5 text-center font-nunito text-lg"> Sign in to continue</Text>
+        <CustomTextInput
+          labelText="Email"
           placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
+          onChangeText={(t) => {
+            emailRefInput.current = t;
+          }}
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <TextInput
-          className="mb-4 h-12 w-full rounded-md border border-gray-300 bg-white px-4"
+        <CustomTextInput
+          labelText="Password"
           placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
+          onChangeText={(t) => {
+            passwordRefInput.current = t;
+          }}
           secureTextEntry
         />
-        <TouchableOpacity className="bg-primary mb-4 h-12 w-full items-center justify-center rounded-md">
-          <Text className="text-lg font-bold text-white">Sign In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity /* onPress={() => navigation.navigate('ForgotPassword')} */>
-          <Text className="text-primary underline">Forgot Password?</Text>
-        </TouchableOpacity>
-        <View className="mt-5 flex-row">
-          <Text>Don't have an account? </Text>
-          <TouchableOpacity /* onPress={() => navigation.navigate('SignUp')} */>
-            <Text className="text-primary underline">Sign Up</Text>
+        <View className="flex flex-row">
+          <Text className="font-nunito">Don't have an account? </Text>
+          <TouchableOpacity onPress={handleNavigateSignUp}>
+            <Text className="text-primary font-nunito-bold underline">Sign Up</Text>
           </TouchableOpacity>
         </View>
+        <View className="mt-1 h-auto w-full flex-row items-center justify-center gap-2">
+          <TouchableOpacity
+            onPress={async () => {
+              await handleBiometricLogin();
+            }}>
+            {keepSignIn ? (
+              <LucideSquareCheckBig size={16} stroke={Colors.base['50']} />
+            ) : (
+              <Square size={16} stroke={Colors.base['50']} />
+            )}
+          </TouchableOpacity>
+          <Text className="text-primary font-nunito-semibold text-md">Keep me signed in</Text>
+        </View>
+        <Button
+          className="mt-5 flex h-auto w-full items-center justify-center rounded-xl bg-base-200"
+          onPress={handleLogin}>
+          <Text className="text-center font-nunito-bold text-md text-base-700">
+            {isLoading ? 'Aguarde' : 'Login'}
+          </Text>
+        </Button>
       </View>
     </SafeScreenContent>
   );
