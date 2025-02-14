@@ -5,7 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator } from 'react-native';
 import './global.css';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Toaster } from 'sonner-native';
 
 const queryClient = new QueryClient();
 
@@ -21,12 +23,15 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <GestureHandlerRootView>
       <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <MainNavigation />
-        </QueryClientProvider>
+        <NavigationContainer>
+          <QueryClientProvider client={queryClient}>
+            <MainNavigation />
+          </QueryClientProvider>
+        </NavigationContainer>
+        <Toaster />
       </SafeAreaProvider>
-    </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
