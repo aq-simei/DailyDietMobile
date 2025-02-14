@@ -1,23 +1,42 @@
 import Logo from '@assets/Logo.svg';
 import { SafeScreenContent } from '@components/SafeScreenContent/SafeScreenContent';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppStackParamList, AuthStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
+import { showErrorToast, showInfoToast, showSuccessToast } from '@src/Components/Toasts/Toasts';
 import { Colors } from '@src/Constants/Colors';
 import { useLogin } from '@src/Hooks/useLogin';
+import { useRefreshTokenLogin } from '@src/Hooks/useRefreshTokenLogin';
 import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
+import { refreshTokenLogin } from '@src/api/Mutations/RefreshTokenLogin';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStorage from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
 import { LucideSquareCheckBig, Square } from 'lucide-react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { toast } from 'sonner-native';
 
 const SignIn = () => {
   const [keepSignIn, setKeepSignIn] = useState(false);
+  const savedCredentialsRef = React.useRef(false);
   const appNav = useNavigation<NavigationProp<AppStackParamList>>();
+
+  const {
+    login: refreshTokenLogin,
+    success: refreshTokenSuccess,
+    error: refreshTokenError,
+  } = useRefreshTokenLogin({
+    onErrorCallback: () => {
+      showErrorToast('Login Failed');
+      console.log(refreshTokenError);
+    },
+    onSuccessCallback: () => {
+      showSuccessToast('Login executed with saved credentials');
+      appNav.navigate('App');
+    },
+  });
   const { login, isLoading } = useLogin({
     onSuccessCallback: (data: LoginResponseDTO) => {
       showInfoToast('Login Success');
@@ -33,6 +52,19 @@ const SignIn = () => {
     navigation.navigate('SignUp');
   };
 
+  const handleRefreshTokenLogin = async () => {
+    // if (savedCredentialsRef.current) return;
+    showInfoToast('Looking for saved credentials');
+    const refreshToken = await SecureStorage.getItemAsync('DAILY_DIET_REFRESH_TOKEN');
+    if (refreshToken) {
+      refreshTokenLogin({ refresh_token: refreshToken });
+      savedCredentialsRef.current = true;
+    }
+    if (refreshTokenSuccess) {
+      appNav.navigate('App');
+    }
+  };
+
   const handleBiometricLogin = async () => {
     try {
       const authResult = await LocalAuthentication.authenticateAsync({
@@ -43,16 +75,20 @@ const SignIn = () => {
       });
       if (authResult.success) {
         setKeepSignIn(!keepSignIn);
-        toast.success('Biometric authentication success');
+        showSuccessToast('Biometric authentication success');
       }
     } catch (error) {
-      toast.error(error as string);
+      showErrorToast(error as string);
     }
   };
 
   const handleLogin = useCallback(() => {
     // Do something with email and password
     login({ email: emailRefInput.current, password: passwordRefInput.current });
+  }, []);
+
+  useEffect(() => {
+    handleRefreshTokenLogin();
   }, []);
 
   return (
