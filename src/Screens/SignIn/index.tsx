@@ -20,11 +20,11 @@ const SignIn = () => {
   const appNav = useNavigation<NavigationProp<AppStackParamList>>();
   const { login, isLoading } = useLogin({
     onSuccessCallback: (data: LoginResponseDTO) => {
-      toast.info('Login Success');
+      showInfoToast('Login Success');
       SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
       appNav.navigate('App');
     },
-    onErrorCallback: () => toast.error('Login Failed'),
+    onErrorCallback: () => showErrorToast('Login Failed'),
   });
   const emailRefInput = React.useRef('');
   const passwordRefInput = React.useRef('');
