@@ -9,11 +9,7 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "plugins": [
-      "expo-local-authentication",
-      "expo-font",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-local-authentication", "expo-font", "expo-secure-store"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,9 +18,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -33,12 +27,7 @@
       "bundleIdentifier": "daily.dev"
     },
     "android": {
-      "permissions": [
-        "USE_BIOMETRIC",
-        "USE_FINGERPRINT",
-        "BIOMETRIC_STRONG",
-        "BIOMETRIC_WEAK"
-      ],
+      "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "BIOMETRIC_STRONG", "BIOMETRIC_WEAK"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/ForkKnife.png",
         "backgroundColor": "#ffffff"

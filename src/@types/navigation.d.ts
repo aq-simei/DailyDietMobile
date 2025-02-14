@@ -7,7 +7,7 @@ declare global {
 type AppStackParamList = {
   App: undefined;
   Auth: undefined;
-}
+};
 
 type HomeStackParamList = {
   Home: undefined;

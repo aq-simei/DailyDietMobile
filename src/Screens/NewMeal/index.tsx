@@ -1,5 +1,6 @@
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '@src/@types/navigation';
 import { SafeScreenContent } from '@src/Components/SafeScreenContent/SafeScreenContent';
 import { Colors } from '@src/Constants/Colors';
 import { ArrowLeft, CircleAlert, CircleCheck } from 'lucide-react-native';
@@ -50,7 +51,7 @@ const NewMeal = () => {
           <View className="mb-4">
             <Text className="mb-2 font-nunito-bold text-base">Name</Text>
             <TextInput
-              className="h-12 w-full rounded-md border border-gray-300 p-2 font-nunito-semibold"
+              className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold"
               placeholder="Enter meal name"
               autoCapitalize="words"
             />
@@ -58,7 +59,7 @@ const NewMeal = () => {
           <View className="mb-4">
             <Text className="mb-2 font-nunito-bold text-base">Description</Text>
             <TextInput
-              className="text-top h-20 w-full rounded-md border border-gray-300 font-nunito-semibold text-base-50"
+              className="text-top border-gray-300 h-20 w-full rounded-md border font-nunito-semibold text-base-50"
               placeholder="Enter meal description"
               textAlignVertical="top"
               multiline
@@ -69,7 +70,7 @@ const NewMeal = () => {
               <Text className="mb-2 font-nunito-bold text-base">Date</Text>
               <TouchableOpacity onPress={showDatepicker}>
                 <TextInput
-                  className="h-12 w-full rounded-md border border-gray-300 p-2 font-nunito-semibold text-md"
+                  className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold text-md"
                   onPress={showDatepicker}
                   value={date.toLocaleDateString([], {
                     day: '2-digit',
@@ -85,7 +86,7 @@ const NewMeal = () => {
               <Text className="mb-2 font-nunito-bold text-base">Time</Text>
               <TouchableOpacity onPress={showTimepicker}>
                 <TextInput
-                  className="h-12 w-full rounded-md border border-gray-300 p-2 font-nunito-semibold text-md"
+                  className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold text-md"
                   value={date.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -112,7 +113,7 @@ const NewMeal = () => {
             <TouchableOpacity
               className={twMerge(
                 'flex-1 flex-row items-center justify-center gap-1 rounded-xl py-4',
-                intoDiet === false ? 'border-2 border-red-500 bg-brick-red-100' : 'bg-base-600'
+                intoDiet === false ? 'border-red-500 border-2 bg-brick-red-100' : 'bg-base-600'
               )}
               onPress={() => setIntoDiet(false)}>
               <CircleAlert color={Colors['brick-red'][600]} />

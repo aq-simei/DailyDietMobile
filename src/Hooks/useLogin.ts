@@ -24,7 +24,10 @@ export const useLogin = ({ onSuccessCallback, onErrorCallback }: UseLoginProps):
   const { data, mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: ({ email, password }: LoginProps) => login({ email, password }),
     onSuccess: async (data) => {
-      onSuccessCallback({ refresh_token: data.refresh_token, token: data.token });
+      onSuccessCallback({
+        refresh_token: data.refresh_token,
+        token: data.token,
+      });
     },
     onError: () => {
       onErrorCallback();
