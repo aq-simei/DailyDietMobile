@@ -6,19 +6,19 @@ import { Button } from '@src/Components/Button/Button';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 import { Colors } from '@src/Constants/Colors';
 import { useLogin } from '@src/Hooks/useLogin';
+import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
 import * as LocalAuthentication from 'expo-local-authentication';
+import * as SecureStorage from 'expo-secure-store';
 import { StatusBar } from 'expo-status-bar';
 import { LucideSquareCheckBig, Square } from 'lucide-react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { toast } from 'sonner-native';
-import * as SecureStorage from 'expo-secure-store';
-import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
 
 const SignIn = () => {
   const [keepSignIn, setKeepSignIn] = useState(false);
   const appNav = useNavigation<NavigationProp<AppStackParamList>>();
-  const { login, success, token, error, isLoading } = useLogin({
+  const { login, isLoading } = useLogin({
     onSuccessCallback: (data: LoginResponseDTO) => {
       toast.info('Login Success');
       SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
