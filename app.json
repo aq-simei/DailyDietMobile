@@ -10,6 +10,7 @@
       "tsconfigPaths": true
     },
     "plugins": [
+      "expo-local-authentication",
       "expo-font",
       "expo-secure-store"
     ],
@@ -25,9 +26,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "This app uses face recognition to hold your login your account."
+      },
+      "bundleIdentifier": "daily.dev"
     },
     "android": {
+      "permissions": [
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "BIOMETRIC_STRONG",
+        "BIOMETRIC_WEAK"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/ForkKnife.png",
         "backgroundColor": "#ffffff"
