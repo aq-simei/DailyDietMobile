@@ -9,7 +9,7 @@ type ButtonProps = ComponentProps<typeof TouchableOpacity> & {
 const Button: FC<ButtonProps> = ({ children, className, onPress, ...props }) => {
   return (
     <TouchableOpacity
-      className={`w-full flex-row items-center justify-center rounded-lg p-4 ${className}`}
+      className={`w-full flex-row items-center justify-center rounded-lg p-2 ${className}`}
       onPress={onPress}
       {...props}>
       {children}
