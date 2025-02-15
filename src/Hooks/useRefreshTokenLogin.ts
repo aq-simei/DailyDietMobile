@@ -22,21 +22,22 @@ export const useRefreshTokenLogin = ({
 }: UseRefreshTokenLoginProps): useRefreshTokenLoginReturn => {
   const { data, mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: ({ refresh_token }: RefreshTokenLoginDTO) => refreshTokenLogin({ refresh_token }),
-    onSuccess: async () => {
+    onSuccess: (data) => {
       onSuccessCallback();
+      if (data !== undefined) {
+        // put bearer token on the axios instance
+        axiosInstance.interceptors.request.use((config) => {
+          config.headers['Authorization'] = `Bearer ${data.jwt_token}`;
+          return config;
+        });
+      }
     },
     onError: (e) => {
       onErrorCallback();
       console.log(e);
     },
   });
-  if (isSuccess && data !== undefined) {
-    // put bearer token on the axios instance
-    axiosInstance.interceptors.request.use((config) => {
-      config.headers['Authorization'] = `Bearer ${data.jwt_token}`;
-      return config;
-    });
-  }
+
   return {
     login: mutateAsync,
     isLoading: isPending,

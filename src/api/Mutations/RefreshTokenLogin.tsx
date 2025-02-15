@@ -1,5 +1,4 @@
 import { RefreshTokenLoginDTO } from '../DTOs/Requests/RefreshTokenLoginRequest';
-import { LoginResponseDTO } from '../DTOs/Responses/LoginResponse';
 import { RefreshTokenLoginResponseDTO } from '../DTOs/Responses/RefreshTokenLoginResponse';
 import { axiosInstance } from '../axios';
 
