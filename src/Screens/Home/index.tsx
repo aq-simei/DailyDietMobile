@@ -5,15 +5,18 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import { Card } from '@src/Components/Card/Card';
+import { UseFetchUserMeals } from '@src/Hooks/useFetchUserMeals';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, CircleAlert, CircleCheck, Plus } from 'lucide-react-native';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { SlideInLeft } from 'react-native-reanimated';
+import { Meal } from '@src/@types/meal';
+import { formatTime } from '@src/Utils/formatTime';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
-  // const { login } = useLogin();
+  const { data, isError, isLoading, success } = UseFetchUserMeals();
   return (
     <Animated.View entering={SlideInLeft.duration(1000)} className="flex-1">
       <SafeScreenContent hasHeader>
@@ -44,20 +47,17 @@ const Home = () => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingTop: 14, paddingBottom: 56 }}
-          sections={mealData.map((item) => ({
-            title: item.date,
-            data: item.meals,
-          }))}
-          keyExtractor={(item, index) => item.name + index}
-          renderItem={({ item }) => (
+          sections={data as { title: string; data: Meal[] }[]}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }: { item: Meal }) => (
             <View className="m-2 flex flex-row items-center justify-center rounded-xl border border-base-300 p-4">
-              <Text className="px-2 font-nunito-bold">{item.time}</Text>
+              <Text className="px-2 font-nunito-bold">{formatTime(item.time)}</Text>
               <Text className="flex-1 font-nunito-semibold">
                 <Text className="font-nunito-bold text-base-400">| </Text>
-                {item.name}
+                {item.description}
               </Text>
               <Text className="font-nunito">
-                {item.status === 'ok' ? (
+                {item.in_diet ? (
                   <CircleCheck color={Colors.green[400]} size={16} />
                 ) : (
                   <CircleAlert color={Colors['brick-red'][400]} size={16} />
