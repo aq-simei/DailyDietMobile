@@ -110,7 +110,9 @@ const NewMeal = () => {
             <TouchableOpacity
               className={twMerge(
                 'flex-1 flex-row items-center justify-center gap-1 rounded-xl py-4',
-                intoDiet === false ? 'border-brick-red-600 border-2 bg-brick-red-100' : 'bg-base-600'
+                intoDiet === false
+                  ? 'border-2 border-brick-red-600 bg-brick-red-100'
+                  : 'bg-base-600'
               )}
               onPress={() => setIntoDiet(false)}>
               <CircleAlert color={Colors['brick-red'][600]} />
