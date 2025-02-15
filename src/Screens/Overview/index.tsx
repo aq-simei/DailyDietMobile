@@ -1,5 +1,6 @@
 import { SafeScreenContent } from '@components/SafeScreenContent/SafeScreenContent';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '@src/@types/navigation';
 import { Colors } from '@src/Constants/Colors';
 import { ArrowLeft } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
