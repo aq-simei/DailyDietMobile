@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { twMerge } from 'tailwind-merge';
+import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 
 const NewMeal = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -48,29 +49,25 @@ const NewMeal = () => {
           </View>
         </View>
         <View className="shadow-3xl w-full flex-1 rounded-t-2xl bg-base-700 p-6 shadow-base-50">
-          <View className="mb-4">
-            <Text className="mb-2 font-nunito-bold text-base">Name</Text>
-            <TextInput
-              className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold"
-              placeholder="Enter meal name"
-              autoCapitalize="words"
-            />
-          </View>
-          <View className="mb-4">
-            <Text className="mb-2 font-nunito-bold text-base">Description</Text>
-            <TextInput
-              className="text-top border-gray-300 h-20 w-full rounded-md border font-nunito-semibold text-base-50"
-              placeholder="Enter meal description"
-              textAlignVertical="top"
-              multiline
-            />
-          </View>
+          <CustomTextInput
+            onChangeText={() => {}}
+            labelText="Name"
+            placeholder="Enter meal name"
+            autoCapitalize="words"
+          />
+          <CustomTextInput
+            onChangeText={() => {}}
+            labelText="Description"
+            placeholder="Enter meal description"
+            textAlignVertical="top"
+            multiline
+          />
           <View className="mb-4 flex flex-row justify-between gap-4">
             <View className="flex-1">
               <Text className="mb-2 font-nunito-bold text-base">Date</Text>
               <TouchableOpacity onPress={showDatepicker}>
                 <TextInput
-                  className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold text-md"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
                   onPress={showDatepicker}
                   value={date.toLocaleDateString([], {
                     day: '2-digit',
@@ -86,7 +83,7 @@ const NewMeal = () => {
               <Text className="mb-2 font-nunito-bold text-base">Time</Text>
               <TouchableOpacity onPress={showTimepicker}>
                 <TextInput
-                  className="border-gray-300 h-12 w-full rounded-md border p-2 font-nunito-semibold text-md"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
                   value={date.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -113,7 +110,7 @@ const NewMeal = () => {
             <TouchableOpacity
               className={twMerge(
                 'flex-1 flex-row items-center justify-center gap-1 rounded-xl py-4',
-                intoDiet === false ? 'border-red-500 border-2 bg-brick-red-100' : 'bg-base-600'
+                intoDiet === false ? 'border-brick-red-600 border-2 bg-brick-red-100' : 'bg-base-600'
               )}
               onPress={() => setIntoDiet(false)}>
               <CircleAlert color={Colors['brick-red'][600]} />

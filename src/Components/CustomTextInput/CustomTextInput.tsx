@@ -17,7 +17,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     <View className="mb-4 flex w-full">
       <Text className="mb-2">{labelText}</Text>
       <TextInput
-        className="bg-white h-12 w-full rounded-md border border-base-300 px-4"
+        className="bg-white h-12 w-full rounded-md border-2 border-base-300 px-4"
         value={value}
         onChangeText={onChangeText}
         {...props}
