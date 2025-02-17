@@ -1,4 +1,4 @@
-import { RefreshTokenLoginDTO } from '@src/api/DTOs/Requests/RefreshTokenLoginRequest';
+import { RefreshTokenLoginDTO } from '@src/types/dtos/Requests/RefreshTokenLoginRequest';
 import { axiosInstance } from '@src/api/axios';
 import { refreshTokenLogin } from '@src/api/Mutations/RefreshTokenLogin';
 import { useMutation } from '@tanstack/react-query';

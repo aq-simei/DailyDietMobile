@@ -1,5 +1,5 @@
 import { axiosInstance } from '../axios';
-import { GetUserMealsResponse } from '../DTOs/Responses/GetUserMealsResponse';
+import { GetUserMealsResponse } from '../../types/dtos/Responses/GetUserMealsResponse';
 
 export const fetchUserMeals = async (): Promise<GetUserMealsResponse> => {
   try {

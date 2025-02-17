@@ -1,5 +1,5 @@
 import { Meal } from '@src/@types/meal';
-import { GetUserMealsResponse } from '@src/api/DTOs/Responses/GetUserMealsResponse';
+import { GetUserMealsResponse } from '@src/types/dtos/Responses/GetUserMealsResponse';
 import { fetchUserMeals } from '@src/api/Queries/FetchUserMeals';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,7 +17,7 @@ type UseFetchUserMealsData = {
 
 export const UseFetchUserMeals = (): UseFetchUserMealsData => {
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ['fetchUserMeals'],
+    queryKey: ['userMeals'],
     queryFn: async () => {
       const { meals } = await fetchUserMeals();
       // Group meals by date

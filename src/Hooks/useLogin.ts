@@ -1,4 +1,4 @@
-import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
+import { LoginResponseDTO } from '@src/types/dtos/Responses/LoginResponse';
 import { login } from '@src/api/Mutations/Login';
 import { axiosInstance } from '@src/api/axios';
 import { useMutation } from '@tanstack/react-query';

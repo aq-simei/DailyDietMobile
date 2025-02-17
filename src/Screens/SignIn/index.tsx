@@ -8,7 +8,7 @@ import { showErrorToast, showInfoToast, showSuccessToast } from '@src/Components
 import { Colors } from '@src/Constants/Colors';
 import { useLogin } from '@src/Hooks/useLogin';
 import { useRefreshTokenLogin } from '@src/Hooks/useRefreshTokenLogin';
-import { LoginResponseDTO } from '@src/api/DTOs/Responses/LoginResponse';
+import { LoginResponseDTO } from '@src/types/dtos/Responses/LoginResponse';
 import { refreshTokenLogin } from '@src/api/Mutations/RefreshTokenLogin';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStorage from 'expo-secure-store';
@@ -16,7 +16,6 @@ import { StatusBar } from 'expo-status-bar';
 import { LucideSquareCheckBig, Square } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { toast } from 'sonner-native';
 
 const SignIn = () => {
   const [keepSignIn, setKeepSignIn] = useState(false);
