@@ -1,5 +1,5 @@
-import { RefreshTokenLoginDTO } from '../DTOs/Requests/RefreshTokenLoginRequest';
-import { RefreshTokenLoginResponseDTO } from '../DTOs/Responses/RefreshTokenLoginResponse';
+import { RefreshTokenLoginDTO } from '../../types/dtos/Requests/RefreshTokenLoginRequest';
+import { RefreshTokenLoginResponseDTO } from '../../types/dtos/Responses/RefreshTokenLoginResponse';
 import { axiosInstance } from '../axios';
 
 export const refreshTokenLogin = async ({

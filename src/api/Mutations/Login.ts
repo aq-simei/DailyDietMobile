@@ -1,5 +1,5 @@
-import { LoginRequestDTO, loginRoute } from '../DTOs/Requests/LoginRequest';
-import { LoginResponseDTO } from '../DTOs/Responses/LoginResponse';
+import { LoginRequestDTO, loginRoute } from '../../types/dtos/Requests/LoginRequest';
+import { LoginResponseDTO } from '../../types/dtos/Responses/LoginResponse';
 import { axiosInstance } from '../axios';
 
 export const login = async ({ email, password }: LoginRequestDTO): Promise<LoginResponseDTO> => {
