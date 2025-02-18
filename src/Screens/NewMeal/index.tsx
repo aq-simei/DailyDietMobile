@@ -12,9 +12,12 @@ import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateMealFormSchema, CreateMealFormDTO } from '@src/types/schemas/CreateMealFormSchema';
+import { UseCreateMeal } from '@src/Hooks/useCreateMeal';
+import { showInfoToast } from '@src/Components/Toasts/Toasts';
 
 const NewMeal = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
+  const { createMeal, createMealError, createMealPending, createMealSuccess } = UseCreateMeal();
   const [date, setDate] = useState(new Date());
   const [inDiet, setInDiet] = useState<boolean | null>(null);
   const {
@@ -27,12 +30,26 @@ const NewMeal = () => {
   });
 
   const onSubmit = (data: CreateMealFormDTO) => {
+    console.log(data)
+    console.log(date)
+    createMeal({
+      description: data.description,
+      in_diet: data.inDiet,
+      name: data.name,
+      date: date,
+      time: date,
+    });
     console.log(data);
+  };
+
+  const onError = (error: any) => {
+    console.log(error);
   };
 
   const onChangeDate = (e: any, selectedDate: any) => {
     const currentDate = selectedDate;
     setDate(currentDate);
+    showInfoToast('Updated date');
   };
 
   const showMode = (currentMode: any) => {
@@ -98,46 +115,31 @@ const NewMeal = () => {
           />
           <View className="mb-4 flex flex-row justify-between gap-4">
             <View className="flex-1">
-              <Text className="mb-2 font-nunito-bold text-base">Date</Text>
               <TouchableOpacity onPress={showDatepicker}>
-                <Controller
-                  control={control}
-                  name="date"
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextInput
-                      labelText="Date"
-                      onChangeText={onChange}
-                      className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                      value={date.toLocaleDateString([], {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                      editable={false}
-                    />
-                  )}
+                <CustomTextInput
+                  labelText="Date"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                  value={date.toLocaleDateString([], {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })}
+                  editable={false}
                 />
               </TouchableOpacity>
             </View>
             <View className="flex-1">
-              <Text className="mb-2 font-nunito-bold text-base">Time</Text>
               <TouchableOpacity onPress={showTimepicker}>
-                <Controller
-                  control={control}
-                  name="time"
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextInput
-                      labelText="Time"
-                      onChangeText={onChange}
-                      className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                      value={date.toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                      })}
-                      editable={false}
-                    />
-                  )}
+                <CustomTextInput
+                  onChangeText={() => showInfoToast('Updated time')}
+                  labelText="Time"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                  value={date.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                  })}
+                  editable={false}
                 />
               </TouchableOpacity>
             </View>
@@ -176,7 +178,7 @@ const NewMeal = () => {
             </View>
             {/* keep selector simple, refactor later for select component */}
             {errors.inDiet?.message && (
-              <View className="flex flex-row items-center gap-2 mt-1">
+              <View className="mt-1 flex flex-row items-center gap-2">
                 <AlertCircle
                   width={16}
                   height={16}
@@ -191,7 +193,7 @@ const NewMeal = () => {
           </View>
           <TouchableOpacity
             className="mt-auto w-full items-center justify-center rounded-xl bg-base-100"
-            onPress={handleSubmit(onSubmit)}>
+            onPress={handleSubmit(onSubmit, onError)}>
             <Text className="p-4 py-6 font-nunito-bold text-mdi text-base-700">
               Record new meal
             </Text>
