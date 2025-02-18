@@ -5,7 +5,14 @@ import { showInfoToast, showSuccessToast } from '@src/Components/Toasts/Toasts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@src/@types/navigation';
 
-export const UseCreateMeal = () => {
+type UseCreateMealData = {
+  createMeal: (meal: AddMealRequestDTO) => Promise<void>;
+  createMealSuccess: boolean;
+  createMealError: boolean;
+  createMealPending: boolean;
+};
+
+export const UseCreateMeal = (): UseCreateMealData => {
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const queryClient = useQueryClient();
   const {
