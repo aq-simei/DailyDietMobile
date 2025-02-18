@@ -14,6 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateMealFormSchema, CreateMealFormDTO } from '@src/types/schemas/CreateMealFormSchema';
 import { UseCreateMeal } from '@src/Hooks/useCreateMeal';
 import { showErrorToast, showInfoToast } from '@src/Components/Toasts/Toasts';
+import { formatTime } from '@src/Utils/formatters/formatTime';
+import { formatDate } from '@src/Utils/formatters/formatDate';
 
 const NewMeal = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -44,7 +46,7 @@ const NewMeal = () => {
     if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
     if (error.description)
       showErrorToast('Error in form fields: description' + error.description.message);
-    if (error.inDiet) showErrorToast('Error in form field: in diet meal' + error.inDiet.message);
+    if (error.inDiet) showErrorToast('Error in form field in diet: ' + error.inDiet.message);
   };
 
   const onChangeDate = (e: any, selectedDate: any) => {
@@ -72,17 +74,19 @@ const NewMeal = () => {
   return (
     <Animated.View entering={SlideInDown} exiting={SlideOutDown} className="flex-1">
       <SafeScreenContent className="mx-0 bg-base-500">
-        <View className="mx-6 mt-6 flex w-fit flex-row">
+        <View className="mx-6 mt-6 flex w-fit flex-row" testID="mew-meal-header">
           <TouchableOpacity
             onPress={goBack}
             className="h-12 items-center justify-center rounded-full">
             <ArrowLeft color={Colors.base[50]} strokeWidth={4} height={18} width={18} />
           </TouchableOpacity>
           <View className="mx-auto flex w-auto items-center">
-            <Text className="mr-6 font-nunito-bold text-lg">New meal</Text>
+            <Text className="mr-6 font-nunito-bold text-lg">New Meal</Text>
           </View>
         </View>
-        <View className="shadow-3xl w-full flex-1 rounded-t-2xl bg-base-700 p-6 shadow-base-50">
+        <View
+          className="shadow-3xl w-full flex-1 rounded-t-2xl bg-base-700 p-6 shadow-base-50"
+          testID="new-meal-form">
           <Controller
             control={control}
             name="name"
@@ -120,11 +124,7 @@ const NewMeal = () => {
                 <CustomTextInput
                   labelText="Date"
                   className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                  value={date.toLocaleDateString([], {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                  })}
+                  value={formatDate(date)}
                   editable={false}
                 />
               </TouchableOpacity>
@@ -135,11 +135,7 @@ const NewMeal = () => {
                   onChangeText={() => showInfoToast('Updated time')}
                   labelText="Time"
                   className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                  value={date.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
+                  value={formatTime(date)}
                   editable={false}
                 />
               </TouchableOpacity>
@@ -148,7 +144,7 @@ const NewMeal = () => {
           <Text className="mb-2 items-center justify-center font-nunito-bold text-mdi">
             In diet meal?
           </Text>
-          <View className="flex flex-col">
+          <View className="flex flex-col" testID="in-diet-meal-picker">
             <View className="flex w-full flex-row items-center gap-4">
               <TouchableOpacity
                 className={twMerge(

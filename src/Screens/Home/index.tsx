@@ -12,7 +12,7 @@ import { ArrowUpRight, CircleAlert, CircleCheck, Plus } from 'lucide-react-nativ
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { SlideInLeft } from 'react-native-reanimated';
 import { Meal } from '@src/@types/meal';
-import { formatTime } from '@src/Utils/formatTime';
+import { formatTime } from '@src/Utils/formatters/formatTime';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
