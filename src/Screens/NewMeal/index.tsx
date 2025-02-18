@@ -13,7 +13,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateMealFormSchema, CreateMealFormDTO } from '@src/types/schemas/CreateMealFormSchema';
 import { UseCreateMeal } from '@src/Hooks/useCreateMeal';
-import { showInfoToast } from '@src/Components/Toasts/Toasts';
+import { showErrorToast, showInfoToast } from '@src/Components/Toasts/Toasts';
 
 const NewMeal = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -30,8 +30,6 @@ const NewMeal = () => {
   });
 
   const onSubmit = (data: CreateMealFormDTO) => {
-    console.log(data)
-    console.log(date)
     createMeal({
       description: data.description,
       in_diet: data.inDiet,
@@ -39,11 +37,14 @@ const NewMeal = () => {
       date: date,
       time: date,
     });
-    console.log(data);
   };
 
   const onError = (error: any) => {
-    console.log(error);
+    // show error message on toast
+    if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
+    if (error.description)
+      showErrorToast('Error in form fields: description' + error.description.message);
+    if (error.inDiet) showErrorToast('Error in form field: in diet meal' + error.inDiet.message);
   };
 
   const onChangeDate = (e: any, selectedDate: any) => {
