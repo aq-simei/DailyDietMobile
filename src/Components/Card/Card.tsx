@@ -7,16 +7,16 @@ import { CardFooter } from './Footer/Footer';
 export interface CardProps {
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
 }
 
 const Card: FC<CardProps> & {
   Header: typeof CardHeader;
   Content: typeof CardBody;
   Footer: typeof CardFooter;
-} = ({ children, className, onClick }) => {
+} = ({ children, className }) => {
   return (
     <View
+      testID="card-element"
       className={`${className} relative mt-8 h-20 w-full justify-center rounded-lg bg-green-200`}>
       {children}
     </View>
