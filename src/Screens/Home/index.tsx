@@ -54,7 +54,7 @@ const Home = () => {
               <Text className="px-2 font-nunito-bold">{formatTime(item.time)}</Text>
               <Text className="flex-1 font-nunito-semibold">
                 <Text className="font-nunito-bold text-base-400">| </Text>
-                {item.description}
+                {item.name}
               </Text>
               <Text className="font-nunito">
                 {item.in_diet ? (
