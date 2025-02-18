@@ -2,7 +2,7 @@ import { RefreshTokenLoginDTO } from '@src/types/dtos/Requests/RefreshTokenLogin
 import { axiosInstance } from '@src/api/axios';
 import { refreshTokenLogin } from '@src/api/Mutations/RefreshTokenLogin';
 import { useMutation } from '@tanstack/react-query';
-
+import * as SecureStorage from 'expo-secure-store';
 type UseRefreshTokenLoginProps = {
   onSuccessCallback: () => void;
   onErrorCallback: () => void;
@@ -24,6 +24,7 @@ export const useRefreshTokenLogin = ({
     mutationFn: ({ refresh_token }: RefreshTokenLoginDTO) => refreshTokenLogin({ refresh_token }),
     onSuccess: (data) => {
       onSuccessCallback();
+      SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
       if (data !== undefined) {
         // put bearer token on the axios instance
         axiosInstance.interceptors.request.use((config) => {
