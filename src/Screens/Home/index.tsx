@@ -1,6 +1,5 @@
-import { SafeScreenContent } from '@components/SafeScreenContent/SafeScreenContent';
-import { Colors } from '@constants/Colors';
-import { mealData } from '@constants/dataMeals';
+import { SafeScreenContent } from '@src/Components/SafeScreenContent/SafeScreenContent';
+import { Colors } from '@src/Constants/Colors';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
