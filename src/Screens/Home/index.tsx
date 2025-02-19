@@ -12,6 +12,7 @@ import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { SlideInLeft } from 'react-native-reanimated';
 import { Meal } from '@src/@types/meal';
 import { formatTime } from '@src/Utils/formatters/formatTime';
+import { MealCard } from '@src/Components/MealCard/MealCard';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
@@ -49,20 +50,7 @@ const Home = () => {
           sections={data as { title: string; data: Meal[] }[]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }: { item: Meal }) => (
-            <View className="m-2 flex flex-row items-center justify-center rounded-xl border border-base-300 p-4">
-              <Text className="px-2 font-nunito-bold">{formatTime(item.time)}</Text>
-              <Text className="flex-1 font-nunito-semibold">
-                <Text className="font-nunito-bold text-base-400">| </Text>
-                {item.name}
-              </Text>
-              <Text className="font-nunito">
-                {item.in_diet ? (
-                  <CircleCheck color={Colors.green[400]} size={16} />
-                ) : (
-                  <CircleAlert color={Colors['brick-red'][400]} size={16} />
-                )}
-              </Text>
-            </View>
+            <MealCard meal={item} />
           )}
           renderSectionHeader={({ section: { title } }) => (
             <View className="p-2">
