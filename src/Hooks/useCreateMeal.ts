@@ -32,7 +32,6 @@ export const UseCreateMeal = (): UseCreateMealData => {
     },
     onError: (error) => {
       showInfoToast('Error creating meal');
-      console.log(error);
     },
   });
   return {
