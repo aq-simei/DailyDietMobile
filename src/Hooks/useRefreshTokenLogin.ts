@@ -24,7 +24,7 @@ export const useRefreshTokenLogin = ({
     mutationFn: ({ refresh_token }: RefreshTokenLoginDTO) => refreshTokenLogin({ refresh_token }),
     onSuccess: (data) => {
       onSuccessCallback();
-      SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
+       SecureStorage.setItem('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
       if (data !== undefined) {
         // put bearer token on the axios instance
         axiosInstance.interceptors.request.use((config) => {

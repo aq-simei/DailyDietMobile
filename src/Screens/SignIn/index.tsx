@@ -29,7 +29,6 @@ const SignIn = () => {
   } = useRefreshTokenLogin({
     onErrorCallback: () => {
       showErrorToast('Login Failed');
-      console.log(refreshTokenError);
     },
     onSuccessCallback: () => {
       showSuccessToast('Login executed with saved credentials');
@@ -39,7 +38,9 @@ const SignIn = () => {
   const { login, isLoading } = useLogin({
     onSuccessCallback: async (data: LoginResponseDTO) => {
       showSuccessToast('Login Success');
-      SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
+      if (keepSignIn) {
+        await SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
+      }
       appNav.navigate('App');
     },
     onErrorCallback: () => showErrorToast('Login Failed'),

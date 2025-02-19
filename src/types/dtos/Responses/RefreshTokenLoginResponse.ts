@@ -1,6 +1,6 @@
 export type RefreshTokenLoginResponseDTO = {
   refresh_token: string;
   user_email: string;
-  userId: string;
+  user_id: string;
   jwt_token: string;
 };

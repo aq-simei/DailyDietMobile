@@ -9,7 +9,7 @@ export const refreshTokenLogin = async ({
     refresh_token: refresh_token,
   });
   return {
-    userId: response.data.userId,
+    user_id: response.data.user_id,
     jwt_token: response.data.jwt_token,
     refresh_token: response.data.refresh_token,
     user_email: response.data.user_email,
