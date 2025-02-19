@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
@@ -14,7 +14,7 @@ import { formatDate } from '@src/Utils/formatters/formatDate';
 import { Colors } from '@src/Constants/Colors';
 
 const Form = () => {
-  const { createMeal, createMealError, createMealPending, createMealSuccess } = UseCreateMeal();
+  const { createMeal, createMealPending } = UseCreateMeal();
   const [date, setDate] = useState(new Date());
   const [inDiet, setInDiet] = useState<boolean | null>(null);
   const {
@@ -142,9 +142,7 @@ const Form = () => {
           <TouchableOpacity
             className={twMerge(
               'flex-1 flex-row items-center justify-center gap-1 rounded-xl py-4',
-              inDiet === false
-                ? 'border-2 border-brick-red-600 bg-brick-red-100'
-                : 'bg-base-600'
+              inDiet === false ? 'border-2 border-brick-red-600 bg-brick-red-100' : 'bg-base-600'
             )}
             onPress={() => {
               setValue('inDiet', false);
@@ -162,18 +160,18 @@ const Form = () => {
               stroke={Colors['brick-red']['500']}
               strokeWidth={2}
             />
-            <Text className="font-nunito-bold text-brick-red-500">
-              {errors.inDiet?.message}
-            </Text>
+            <Text className="font-nunito-bold text-brick-red-500">{errors.inDiet?.message}</Text>
           </View>
         )}
       </View>
       <TouchableOpacity
         className="mt-auto w-full items-center justify-center rounded-xl bg-base-100"
         onPress={handleSubmit(onSubmit, onError)}>
-        <Text className="p-4 py-6 font-nunito-bold text-mdi text-base-700">
-          Record new meal
-        </Text>
+        {createMealPending ? (
+          <ActivityIndicator size={'large'} className="p-4" color={Colors.base[700]} />
+        ) : (
+          <Text className="p-4 py-6 font-nunito-bold text-mdi text-base-700">Record new meal</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
