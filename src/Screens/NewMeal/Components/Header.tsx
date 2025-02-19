@@ -1,5 +1,5 @@
 import { Colors } from '@src/Constants/Colors';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowDown, ArrowLeft } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 type HeaderProps = {
@@ -13,7 +13,7 @@ export const Header = ({ goBack }: HeaderProps) => {
         onPress={goBack}
         className="h-12 items-center justify-center rounded-full"
         testID="back-button">
-        <ArrowLeft color={Colors.base[50]} strokeWidth={4} height={18} width={18} />
+        <ArrowDown color={Colors.base[50]} strokeWidth={4} height={18} width={18} />
       </TouchableOpacity>
       <View className="mx-auto flex w-auto items-center">
         <Text className="mr-6 font-nunito-bold text-lg">New Meal</Text>

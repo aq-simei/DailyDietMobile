@@ -6,7 +6,7 @@ import { Button } from '@src/Components/Button/Button';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Save, Trash } from 'lucide-react-native';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Animated, { SlideInRight } from 'react-native-reanimated';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -71,7 +71,7 @@ const EditMeal = () => {
   };
 
   return (
-    <Animated.View entering={SlideInRight.duration(1000)} className="flex-1">
+    <Animated.View entering={FadeInRight.duration(500)} className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <View className="w-full flex-row items-center justify-evenly p-4">

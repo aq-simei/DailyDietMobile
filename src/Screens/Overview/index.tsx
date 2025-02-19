@@ -4,12 +4,12 @@ import { HomeStackParamList } from '@src/@types/navigation';
 import { Colors } from '@src/Constants/Colors';
 import { ArrowLeft } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutLeft } from 'react-native-reanimated';
 
 export const Overview = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
   return (
-    <Animated.View className="flex-1 bg-transparent">
+    <Animated.View className="flex-1 bg-transparent" entering={SlideInDown.duration(500)} exiting={SlideOutLeft.duration(500)}>
       <SafeScreenContent className="mx-0 bg-green-200">
         <View className="border-red50 mt-6 flex w-full flex-row">
           <TouchableOpacity onPress={goBack} className="ml-6 h-10 items-center rounded-full">
