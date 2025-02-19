@@ -37,7 +37,7 @@ const SignIn = () => {
     },
   });
   const { login, isLoading } = useLogin({
-    onSuccessCallback: (data: LoginResponseDTO) => {
+    onSuccessCallback: async (data: LoginResponseDTO) => {
       showSuccessToast('Login Success');
       SecureStorage.setItemAsync('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
       appNav.navigate('App');
@@ -55,6 +55,7 @@ const SignIn = () => {
     if (savedCredentialsRef.current) return;
     showInfoToast('Looking for saved credentials');
     const refreshToken = await SecureStorage.getItemAsync('DAILY_DIET_REFRESH_TOKEN');
+    console.log('refresh token => ' + refreshToken);
     if (refreshToken) {
       refreshTokenLogin({ refresh_token: refreshToken });
       savedCredentialsRef.current = true;
