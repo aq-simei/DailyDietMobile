@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Home } from '@screens/Home/index';
 import { Overview } from '@screens/Overview/index';
 import { HomeStackParamList } from '@src/@types/navigation';
+import { EditMeal } from '@src/Screens/EditMeal';
 import { NewMeal } from '@src/Screens/NewMeal';
 import { ArrowLeft } from 'lucide-react-native';
 import { Image, TouchableOpacity, View } from 'react-native';
@@ -46,6 +47,21 @@ export const Routes = () => {
       <Stack.Screen
         name="NewMeal"
         component={NewMeal}
+        options={{
+          cardStyle: { backgroundColor: 'white' }, // Change to solid background
+          headerShown: false,
+          cardOverlayEnabled: true,
+          headerLeft: () => (
+            <TouchableOpacity className="ml-6" onPress={goBack}>
+              <ArrowLeft size={18} strokeWidth={4} className="color-black" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="EditMeal"
+        component={EditMeal}
         options={{
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,

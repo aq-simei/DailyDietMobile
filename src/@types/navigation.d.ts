@@ -13,6 +13,7 @@ type HomeStackParamList = {
   Home: undefined;
   Overview: undefined;
   NewMeal: undefined;
+  EditMeal: { mealId: string };
 };
 
 export type AuthStackParamList = {
