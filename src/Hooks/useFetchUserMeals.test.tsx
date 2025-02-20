@@ -26,6 +26,28 @@ const mealData: Meal[] = [
     date: new Date('2023-01-01'),
     time: new Date('2023-01-01T08:00:00Z'),
   },
+  {
+    id: '2',
+    name: 'Lunch',
+    description: 'Healthy lunch',
+    in_diet: true,
+    user_id: 'user1',
+    created_at: '2023-01-01T00:00:00Z',
+    updated_at: '2023-01-01T00:00:00Z',
+    date: new Date('2023-01-01'),
+    time: new Date('2023-01-01T12:00:00Z'),
+  },
+  {
+    id: '3',
+    name: 'Dinner',
+    description: 'Healthy dinner',
+    in_diet: true,
+    user_id: 'user1',
+    created_at: '2023-01-01T00:00:00Z',
+    updated_at: '2023-01-01T00:00:00Z',
+    date: new Date('2023-01-01'),
+    time: new Date('2023-01-01T18:00:00Z'),
+  },
   // ...additional mock meals...
 ];
 
@@ -63,6 +85,7 @@ describe('UseFetchUserMeals Hook', () => {
     const { result } = renderHook(() => UseFetchUserMeals(), {
       wrapper: CombinedWrappers,
     });
+    expect(result.current.data.length).toEqual(3);
     expect(result.current.data).toEqual([
       {
         id: '1',
@@ -74,6 +97,28 @@ describe('UseFetchUserMeals Hook', () => {
         updated_at: '2023-01-01T00:00:00Z',
         date: new Date('2023-01-01T00:00:00Z'),
         time: new Date('2023-01-01T08:00:00Z'),
+      },
+      {
+        id: '2',
+        name: 'Lunch',
+        description: 'Healthy lunch',
+        in_diet: true,
+        user_id: 'user1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z',
+        date: new Date('2023-01-01T00:00:00Z'),
+        time: new Date('2023-01-01T12:00:00Z'),
+      },
+      {
+        id: '3',
+        name: 'Dinner',
+        description: 'Healthy dinner',
+        in_diet: true,
+        user_id: 'user1',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z',
+        date: new Date('2023-01-01T00:00:00Z'),
+        time: new Date('2023-01-01T18:00:00Z'),
       },
     ]);
   });
