@@ -19,7 +19,7 @@ jobs:
           node-version: '22.6.0'
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -30,4 +30,4 @@ jobs:
         run: yarn install
 
       - name: Run tests
-        run: yarn test --runInBand --forceExit
+        run: yarn jest

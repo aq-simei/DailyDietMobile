@@ -1,6 +1,8 @@
 {
-  "name": "mobile",
+  "name": "daily_diet_mobile",
   "version": "1.0.0",
+  "description": "Daily Diet Mobile Application",
+  "main": "index.js",
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
