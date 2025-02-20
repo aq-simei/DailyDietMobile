@@ -16,7 +16,7 @@ const MealCard: React.FC<MealListItemProps> = ({ meal }) => {
   return (
     <TouchableOpacity
       className="m-2 flex flex-row items-center justify-center rounded-xl border border-base-300 p-4"
-      onPress={() => navigate('EditMeal', { mealId: 'asdasdasd' })}>
+      onPress={() => navigate('EditMeal', { mealId: meal.id })}>
       <Text className="px-2 font-nunito-bold">{formatTime(meal.time)}</Text>
       <Text className="flex-1 font-nunito-semibold">
         <Text className="font-nunito-bold text-base-400">| </Text>
