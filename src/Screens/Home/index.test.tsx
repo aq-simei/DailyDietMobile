@@ -47,7 +47,6 @@ describe('Home Screen', () => {
     });
 
     const { getByText, debug } = renderWWrappers(<Home />);
-    debug()
     expect(getByText('Dec 30, 2021')).toBeTruthy();
     expect(getByText('| Oatmeal')).toBeTruthy();
     expect(getByText('| Eggs')).toBeTruthy();
