@@ -1,5 +1,4 @@
 import { fetchMeal } from '@src/api/Queries/FetchMeal';
-import { GetMealResponse } from '@src/types/dtos/Responses/GetMealResponse';
 import { useQuery } from '@tanstack/react-query';
 
 type UseFetchMealData = {};
