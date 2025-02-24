@@ -18,7 +18,7 @@ const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
   const { data, isError, isLoading, success } = UseFetchUserMeals();
   return (
-    <Animated.View entering={SlideInLeft.duration(1000)} className="flex-1">
+    <View className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <Card>
@@ -63,7 +63,7 @@ const Home = () => {
           className="absolute bottom-0 left-0 right-0 h-32"
         />
       </SafeScreenContent>
-    </Animated.View>
+    </View>
   );
 };
 

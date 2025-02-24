@@ -51,8 +51,8 @@ export const Routes = () => {
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,
           cardOverlayEnabled: true,
-          animation: "slide_from_bottom",
-          presentation: "transparentModal",
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
           headerLeft: () => (
             <TouchableOpacity className="ml-6" onPress={() => goBack()}>
               <ArrowLeft size={18} strokeWidth={4} className="color-black" />
@@ -68,6 +68,7 @@ export const Routes = () => {
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,
           cardOverlayEnabled: true,
+          animation: 'fade_from_right',
           headerLeft: () => (
             <TouchableOpacity className="ml-6" onPress={goBack}>
               <ArrowLeft size={18} strokeWidth={4} className="color-black" />
