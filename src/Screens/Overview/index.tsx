@@ -9,7 +9,7 @@ import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutLeft } from 'react-nati
 export const Overview = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
   return (
-    <Animated.View className="flex-1 bg-transparent" entering={SlideInDown.duration(500)} exiting={SlideOutLeft.duration(500)}>
+    <View className="bg-transparent flex-1">
       <SafeScreenContent className="mx-0 bg-green-200">
         <View className="border-red50 mt-6 flex w-full flex-row">
           <TouchableOpacity onPress={goBack} className="ml-6 h-10 items-center rounded-full">
@@ -36,7 +36,7 @@ export const Overview = () => {
                 <Text className="font-nunito-bold text-lg">88</Text>
                 <Text className="font-nunito-semibold text-md">In diet meals</Text>
               </View>
-              <View className="w-full flex-1 items-center justify-evenly rounded-xl bg-red-100">
+              <View className="bg-red-100 w-full flex-1 items-center justify-evenly rounded-xl">
                 <Text className="font-nunito-bold text-lg">12</Text>
                 <Text className="font-nunito-semibold text-md">Junk meals</Text>
               </View>
@@ -44,6 +44,6 @@ export const Overview = () => {
           </View>
         </View>
       </SafeScreenContent>
-    </Animated.View>
+    </View>
   );
 };

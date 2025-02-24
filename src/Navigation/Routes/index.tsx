@@ -1,6 +1,6 @@
 import Logo from '@assets/Logo.svg';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { Home } from '@screens/Home/index';
 import { Overview } from '@screens/Overview/index';
 import { HomeStackParamList } from '@src/@types/navigation';
@@ -51,8 +51,10 @@ export const Routes = () => {
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,
           cardOverlayEnabled: true,
+          animation: "slide_from_bottom",
+          presentation: "transparentModal",
           headerLeft: () => (
-            <TouchableOpacity className="ml-6" onPress={goBack}>
+            <TouchableOpacity className="ml-6" onPress={() => goBack()}>
               <ArrowLeft size={18} strokeWidth={4} className="color-black" />
             </TouchableOpacity>
           ),
