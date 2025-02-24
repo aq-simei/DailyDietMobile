@@ -6,9 +6,9 @@ import { Button } from '@src/Components/Button/Button';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Save, Trash } from 'lucide-react-native';
 import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Animated, { FadeIn, FadeInRight } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
@@ -26,7 +26,7 @@ const EditMeal = () => {
     return null;
   }
   const { mealId } = route.params;
-  const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
+  const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
 
   const [inDiet, setInDiet] = useState<boolean | null>(null);
   const { data, fetchMealError, fetchMealLoading, fetchMealSuccess, fetchMealIsError } =
@@ -42,9 +42,7 @@ const EditMeal = () => {
   });
 
   const [date, setDate] = useState(new Date());
-  const onSubmit = (data: CreateMealFormDTO) => {
-    // Handle meal update logic here
-  };
+  const onSubmit = (data: CreateMealFormDTO) => {};
 
   const onError = (error: any) => {
     if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
@@ -80,12 +78,18 @@ const EditMeal = () => {
     showMode('time');
   };
 
+  useEffect(() => {
+    if (data?.meal.in_diet != undefined) {
+      setInDiet(data?.meal.in_diet);
+    }
+  }, [data?.meal.in_diet]);
+
   return (
-    <Animated.View entering={FadeInRight.duration(500)} className="flex-1">
+    <View className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <View className="w-full flex-row items-center justify-evenly p-4">
-          <TouchableOpacity onPress={() => navigate('Home')}>
+          <TouchableOpacity onPress={() => goBack()}>
             <ArrowLeft color={Colors.base[200]} />
           </TouchableOpacity>
           <Text className="flex-1 text-center font-nunito-bold text-lg">
@@ -219,7 +223,7 @@ const EditMeal = () => {
           </Animated.View>
         )}
       </SafeScreenContent>
-    </Animated.View>
+    </View>
   );
 };
 
