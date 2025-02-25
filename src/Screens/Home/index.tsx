@@ -1,6 +1,6 @@
 import { SafeScreenContent } from '@src/Components/SafeScreenContent/SafeScreenContent';
 import { Colors } from '@src/Constants/Colors';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import { Card } from '@src/Components/Card/Card';
@@ -9,16 +9,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, CircleAlert, CircleCheck, Plus } from 'lucide-react-native';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
-import Animated, { SlideInLeft } from 'react-native-reanimated';
+import Animated, { BounceIn, FadeIn } from 'react-native-reanimated';
 import { Meal } from '@src/@types/meal';
 import { formatTime } from '@src/Utils/formatters/formatTime';
 import { MealCard } from '@src/Components/MealCard/MealCard';
+import { MealsHeader } from '@src/Components/MealsHeader/MealsHeader';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
   const { data, isError, isLoading, success } = UseFetchUserMeals();
+  const { params } = useRoute<RouteProp<HomeStackParamList, 'Home'>>();
+  const source = params?.source;
   return (
-    <View className="flex-1">
+    <Animated.View entering={source != 'overview' ? BounceIn : FadeIn} className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <Card>
@@ -35,7 +38,6 @@ const Home = () => {
           </Card.Content>
         </Card>
         <View className="mb-4 mt-4">
-          <Text className="font-nunito-semibold">Meals</Text>
           <Button
             className="w-full flex-row items-center justify-center rounded-lg bg-base-50 p-4"
             onPress={() => navigate('NewMeal')}>
@@ -49,9 +51,8 @@ const Home = () => {
           contentContainerStyle={{ paddingTop: 14, paddingBottom: 56 }}
           sections={data as { title: string; data: Meal[] }[]}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }: { item: Meal }) => (
-            <MealCard meal={item} />
-          )}
+          ListHeaderComponent={<MealsHeader />}
+          renderItem={({ item }: { item: Meal }) => <MealCard meal={item} />}
           renderSectionHeader={({ section: { title } }) => (
             <View className="p-2">
               <Text className="font-nunito-bold text-lg">{title}</Text>
@@ -63,7 +64,7 @@ const Home = () => {
           className="absolute bottom-0 left-0 right-0 h-32"
         />
       </SafeScreenContent>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -10,7 +10,9 @@ type AppStackParamList = {
 };
 
 type HomeStackParamList = {
-  Home: undefined;
+  Home: {
+    source: "overview" | "newMeal" | "editMeal" | "auth";
+  };
   Overview: undefined;
   NewMeal: undefined;
   EditMeal: { mealId: string };

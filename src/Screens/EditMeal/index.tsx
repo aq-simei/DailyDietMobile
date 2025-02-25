@@ -21,7 +21,7 @@ import { formatDate } from '@src/Utils/formatters/formatDate';
 import { UseFetchMeal } from '@src/Hooks/useFetchMeal';
 
 const EditMeal = () => {
-  const route = useRoute<RouteProp<HomeStackParamList>>();
+  const route = useRoute<RouteProp<HomeStackParamList, 'EditMeal'>>();
   if (!route.params) {
     return null;
   }
@@ -85,7 +85,7 @@ const EditMeal = () => {
   }, [data?.meal.in_diet]);
 
   return (
-    <View className="flex-1">
+    <Animated.View className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <View className="w-full flex-row items-center justify-evenly p-4">
@@ -223,7 +223,7 @@ const EditMeal = () => {
           </Animated.View>
         )}
       </SafeScreenContent>
-    </View>
+    </Animated.View>
   );
 };
 

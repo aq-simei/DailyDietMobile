@@ -16,6 +16,7 @@ export const Routes = () => {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
+        animation: 'none',
         headerTransparent: true,
         headerTitle: '',
         cardStyle: { backgroundColor: 'white' },
@@ -23,6 +24,7 @@ export const Routes = () => {
       <Stack.Screen
         name="Home"
         component={Home}
+        initialParams={{ source: 'auth' }}
         options={{
           headerLeft: () => (
             <View className="ml-10">
@@ -51,8 +53,6 @@ export const Routes = () => {
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,
           cardOverlayEnabled: true,
-          animation: 'slide_from_bottom',
-          presentation: 'transparentModal',
           headerLeft: () => (
             <TouchableOpacity className="ml-6" onPress={() => goBack()}>
               <ArrowLeft size={18} strokeWidth={4} className="color-black" />
@@ -68,7 +68,6 @@ export const Routes = () => {
           cardStyle: { backgroundColor: 'white' }, // Change to solid background
           headerShown: false,
           cardOverlayEnabled: true,
-          animation: 'fade_from_right',
           headerLeft: () => (
             <TouchableOpacity className="ml-6" onPress={goBack}>
               <ArrowLeft size={18} strokeWidth={4} className="color-black" />
