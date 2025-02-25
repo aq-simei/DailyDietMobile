@@ -5,15 +5,9 @@ import { Colors } from '@src/Constants/Colors';
 import { ArrowLeft } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
-  BounceIn,
-  FadeIn,
-  FadeInDown,
   FadeInLeft,
-  FadeOut,
   SlideInDown,
-  SlideInLeft,
   SlideInRight,
-  SlideOutLeft,
 } from 'react-native-reanimated';
 
 export const Overview = () => {
@@ -21,7 +15,7 @@ export const Overview = () => {
   return (
     <SafeScreenContent className="mx-0 bg-green-200">
       <Animated.View className="bg-transparent flex-1">
-        <Animated.View entering={SlideInLeft} className="border-red50 mt-6 flex w-full flex-row">
+        <Animated.View entering={SlideInRight} className="border-red50 mt-6 flex w-full flex-row">
           <TouchableOpacity
             onPress={() => navigate('Home', { source: 'overview' })}
             className="ml-6 h-10 items-center rounded-full">

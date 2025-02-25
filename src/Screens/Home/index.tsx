@@ -10,13 +10,13 @@ import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, CircleAlert, CircleCheck, Cog, Plus } from 'lucide-react-native';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
-  BounceIn,
-  FadeIn,
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
   withTiming,
   Easing,
+  SlideInLeft,
+  SlideInUp,
 } from 'react-native-reanimated';
 import { Meal } from '@src/@types/meal';
 import { formatTime } from '@src/Utils/formatters/formatTime';
@@ -49,7 +49,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Animated.View entering={source != 'overview' ? BounceIn : FadeIn} className="flex-1">
+    <Animated.View entering={source == 'overview' ? SlideInLeft : SlideInUp} className="flex-1">
       <SafeScreenContent hasHeader>
         <StatusBar style="auto" />
         <Card>
