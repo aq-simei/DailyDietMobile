@@ -23,7 +23,6 @@ const showSuccessToast = (message: string) => {
         color: Colors.base['600'],
       },
     },
-    dismissible: true,
     icon: <BadgeCheck size={18} color={Colors.base['700']} strokeWidth={2} />,
   });
 };
@@ -46,7 +45,6 @@ const showErrorToast = (message: string) => {
       },
     },
 
-    dismissible: true,
     icon: <BadgeAlert size={18} color={Colors.base['700']} strokeWidth={2} />,
   });
 };
@@ -68,7 +66,6 @@ const showInfoToast = (message: string) => {
         color: Colors.base['700'],
       },
     },
-    dismissible: true,
     icon: <BadgeInfo size={18} color={Colors.base['700']} strokeWidth={2} />,
   });
 };
