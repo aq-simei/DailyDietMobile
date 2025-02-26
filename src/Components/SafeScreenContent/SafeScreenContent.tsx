@@ -12,7 +12,11 @@ export const SafeScreenContent = ({
 }) => {
   return (
     <SafeAreaView
-      className={twMerge('mx-6 flex w-auto flex-1', hasHeader ? 'mt-16' : '', className)}>
+      className={twMerge(
+        'bg-transparent mx-6 flex w-auto flex-1',
+        hasHeader ? 'mt-16' : '',
+        className
+      )}>
       {children}
     </SafeAreaView>
   );

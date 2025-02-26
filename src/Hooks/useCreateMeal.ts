@@ -28,7 +28,7 @@ export const UseCreateMeal = (): UseCreateMealData => {
     onSuccess: () => {
       showSuccessToast('Meal created');
       queryClient.invalidateQueries({ queryKey: ['userMeals'] });
-      navigation.navigate('Home');
+      navigation.navigate('Home', { source: 'newMeal' });
     },
     onError: (error) => {
       showInfoToast('Error creating meal');
