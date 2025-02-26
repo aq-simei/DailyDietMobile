@@ -7,7 +7,7 @@ import { Card } from '@src/Components/Card/Card';
 import { UseFetchUserMeals } from '@src/Hooks/useFetchUserMeals';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowUpRight, CircleAlert, CircleCheck, Cog, Plus } from 'lucide-react-native';
+import { ArrowUpRight, Cog, Plus } from 'lucide-react-native';
 import { SectionList, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -19,14 +19,13 @@ import Animated, {
   SlideInUp,
 } from 'react-native-reanimated';
 import { Meal } from '@src/@types/meal';
-import { formatTime } from '@src/Utils/formatters/formatTime';
 import { MealCard } from '@src/Components/MealCard/MealCard';
 import { MealsHeader } from '@src/Components/MealsHeader/MealsHeader';
 import { useEffect } from 'react';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
-  const { data, isError, isLoading, success } = UseFetchUserMeals();
+  const { data, isLoading } = UseFetchUserMeals();
   const { params } = useRoute<RouteProp<HomeStackParamList, 'Home'>>();
   const source = params?.source;
 
@@ -37,6 +36,13 @@ const Home = () => {
       transform: [{ rotate: `${rotation.value}deg` }],
     };
   });
+
+  const handleDeleteRequest = (meal: Meal) => {
+    navigate('DeleteMeal', {
+      mealId: meal.id,
+      mealName: meal.name,
+    });
+  };
 
   useEffect(() => {
     rotation.value = withRepeat(
@@ -55,7 +61,7 @@ const Home = () => {
         <Card>
           <Card.Header className="relative">
             <Card.Header.Right>
-              <TouchableOpacity onPress={() => navigate('Overview')}>
+              <TouchableOpacity onPress={() => navigate('Overview')} className="rounded-full p-2">
                 <ArrowUpRight color={Colors.green[500]} />
               </TouchableOpacity>
             </Card.Header.Right>
@@ -90,7 +96,9 @@ const Home = () => {
             sections={data as { title: string; data: Meal[] }[]}
             keyExtractor={(item, index) => index.toString()}
             ListHeaderComponent={<MealsHeader />}
-            renderItem={({ item }: { item: Meal }) => <MealCard meal={item} />}
+            renderItem={({ item }: { item: Meal }) => (
+              <MealCard meal={item} onDeleteRequest={handleDeleteRequest} />
+            )}
             renderSectionHeader={({ section: { title } }) => (
               <View className="p-2">
                 <Text className="font-nunito-bold text-lg">{title}</Text>

@@ -11,11 +11,15 @@ type AppStackParamList = {
 
 type HomeStackParamList = {
   Home: {
-    source: "overview" | "newMeal" | "editMeal" | "auth";
+    source: 'overview' | 'newMeal' | 'editMeal' | 'auth';
   };
   Overview: undefined;
   NewMeal: undefined;
   EditMeal: { mealId: string };
+  DeleteMeal: {
+    mealId: string;
+    mealName: string;
+  };
 };
 
 export type AuthStackParamList = {
