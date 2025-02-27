@@ -4,11 +4,11 @@ import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navig
 import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import { Card } from '@src/Components/Card/Card';
-import { UseFetchUserMeals } from '@src/Hooks/useFetchUserMeals';
+import { MealListItem, UseFetchUserMeals } from '@src/Hooks/useFetchUserMeals';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, Cog, Plus } from 'lucide-react-native';
-import { SectionList, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -22,11 +22,12 @@ import { Meal } from '@src/@types/meal';
 import { MealCard } from '@src/Components/MealCard/MealCard';
 import { MealsHeader } from '@src/Components/MealsHeader/MealsHeader';
 import { useEffect } from 'react';
+import { FlashList } from '@shopify/flash-list';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
-  const { data, isLoading } = UseFetchUserMeals();
-  const { params } = useRoute<RouteProp<HomeStackParamList, 'Home'>>();
+  const { data, isLoading, refetch } = UseFetchUserMeals();
+  const { params = { refreshData: false } } = useRoute<RouteProp<HomeStackParamList, 'Home'>>();
   const source = params?.source;
 
   const rotation = useSharedValue(0);
@@ -53,6 +54,23 @@ const Home = () => {
       -1
     );
   }, []);
+
+  useEffect(() => {
+    if (params?.refreshData) {
+      refetch();
+    }
+  }, [params?.refreshData]);
+
+  const renderItem = ({ item }: { item: MealListItem }) => {
+    if (item.type === 'header') {
+      return (
+        <View className="p-2">
+          <Text className="font-nunito-bold text-lg">{item.data as string}</Text>
+        </View>
+      );
+    }
+    return <MealCard meal={item.data as Meal} onDeleteRequest={handleDeleteRequest} />;
+  };
 
   return (
     <Animated.View entering={source == 'overview' ? SlideInLeft : SlideInUp} className="flex-1">
@@ -81,29 +99,24 @@ const Home = () => {
         </View>
         {isLoading ? (
           <View className="mt-12 flex flex-1 items-center">
+            <MealsHeader />
             <Animated.View style={animatedStyle}>
               <Cog strokeWidth={2} stroke={Colors.base[300]} size={42} />
             </Animated.View>
+
             <Text className="font-nunito-bold text-lg text-base-300">
               Retrieving your meals, hold on ...
             </Text>
           </View>
         ) : (
-          <SectionList
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 14, paddingBottom: 56 }}
-            sections={data as { title: string; data: Meal[] }[]}
-            keyExtractor={(item, index) => index.toString()}
+          <FlashList
+            testID="flash-list"
+            data={data}
+            renderItem={renderItem}
+            estimatedItemSize={80}
             ListHeaderComponent={<MealsHeader />}
-            renderItem={({ item }: { item: Meal }) => (
-              <MealCard meal={item} onDeleteRequest={handleDeleteRequest} />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-              <View className="p-2">
-                <Text className="font-nunito-bold text-lg">{title}</Text>
-              </View>
-            )}
+            contentContainerStyle={{ paddingTop: 14, paddingBottom: 56 }}
+            showsVerticalScrollIndicator={false}
           />
         )}
 
