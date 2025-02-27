@@ -56,7 +56,7 @@ describe('UseFetchUserMeals Hook', () => {
     jest.clearAllMocks();
   });
 
-  const mockQueryResult = { data: mealData, isLoading: false, isError: false, isSuccess: true };
+  const mockQueryResult = { data: mealData, isLoading: false, isError: false, isSuccess: true, isRefetching: false, refetch: jest.fn() };
 
   it('should be defined', () => {
     (useQuery as jest.Mock).mockReturnValue(mockQueryResult);
