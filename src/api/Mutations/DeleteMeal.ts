@@ -5,6 +5,6 @@ type DeleteMealDto = {
 };
 
 export const DeleteMeal = (deleteMealDto: DeleteMealDto) => {
-  const response = axiosInstance.delete(`/meals/edit/${deleteMealDto.id}`);
+  const response = axiosInstance.delete(`/meals/delete/${deleteMealDto.id}`);
   return response;
 };
