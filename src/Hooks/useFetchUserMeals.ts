@@ -3,20 +3,22 @@ import { GetUserMealsResponse } from '@src/types/dtos/Responses/GetUserMealsResp
 import { fetchUserMeals } from '@src/api/Queries/FetchUserMeals';
 import { useQuery } from '@tanstack/react-query';
 
-type SectionData = {
-  title: string;
-  data: Meal[];
+export type MealListItem = {
+  type: 'header' | 'meal';
+  id: string;
+  data: Meal | string;
 };
 
 type UseFetchUserMealsData = {
-  data: SectionData[];
+  data: MealListItem[];
   isLoading: boolean;
   isError: boolean;
   success: boolean;
+  refetch: () => void;
 };
 
 export const UseFetchUserMeals = (): UseFetchUserMealsData => {
-  const { data, isLoading, isError, isSuccess } = useQuery({
+  const { data: queryData, isLoading, isError, isSuccess, refetch, isRefetchError, isRefetching } = useQuery({
     queryKey: ['userMeals'],
     queryFn: async () => {
       const { meals } = await fetchUserMeals();
@@ -33,24 +35,28 @@ export const UseFetchUserMeals = (): UseFetchUserMealsData => {
         {} as Record<string, Meal[]>
       );
 
-      // Sort meals by time within each date group
-      const sortedGroupedMeals = Object.keys(groupedMeals).map((date) => ({
-        title: date,
-        data: groupedMeals[date].sort(
-          (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
-        ),
-      }));
+      // Create flat list with headers
+      const flatList: MealListItem[] = [];
+      Object.entries(groupedMeals)
+        .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
+        .forEach(([date, meals]) => {
+          flatList.push({ type: 'header', id: `header-${date}`, data: date });
+          meals
+            .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+            .forEach(meal => {
+              flatList.push({ type: 'meal', id: `meal-${meal.id}`, data: meal });
+            });
+        });
 
-      // Sort groups by date
-      sortedGroupedMeals.sort((a, b) => new Date(b.title).getTime() - new Date(a.title).getTime());
-
-      return sortedGroupedMeals;
+      return flatList;
     },
   });
+
   return {
-    data: data ?? [],
-    isLoading,
+    data: queryData ?? [],
+    isLoading : isLoading || isRefetching,
     isError,
     success: isSuccess,
+    refetch
   };
 };
