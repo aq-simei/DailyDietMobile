@@ -29,8 +29,7 @@ const EditMeal = () => {
   const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
 
   const [inDiet, setInDiet] = useState<boolean | null>(null);
-  const { data, fetchMealError, fetchMealLoading, fetchMealSuccess, fetchMealIsError } =
-    UseFetchMeal({ mealId });
+  const { data, fetchMealLoading } = UseFetchMeal({ mealId });
 
   const {
     control,
@@ -214,7 +213,7 @@ const EditMeal = () => {
             </Button>
             <Button
               className="mt-4 w-full flex-row items-center justify-center rounded-lg bg-brick-red-500 p-4"
-              onPress={handleSubmit(onSubmit, onError)}>
+              onPress={() => console.log('on delete')}>
               <View className="mr-2">
                 <Trash color={Colors.base[600]} strokeWidth={3} size={24} />
               </View>
