@@ -12,7 +12,7 @@ const NewMeal = () => {
   return (
     <Animated.View entering={SlideInDown} className="flex-1" testID={'new-meal-screen'}>
       <SafeScreenContent className="mx-0 bg-base-500">
-        <Header goBack={() => navigate('Home', { source: 'newMeal' })} />
+        <Header goBack={() => navigate('Home', { source: 'newMeal', refreshData: false })} />
         <Form />
       </SafeScreenContent>
     </Animated.View>

@@ -11,7 +11,8 @@ type AppStackParamList = {
 
 type HomeStackParamList = {
   Home: {
-    source: 'overview' | 'newMeal' | 'editMeal' | 'auth';
+    source?: 'overview' | 'newMeal' | 'editMeal' | 'auth';
+    refreshData?: boolean;
   };
   Overview: undefined;
   NewMeal: undefined;
