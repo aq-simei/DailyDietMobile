@@ -16,6 +16,7 @@ export const useDeleteMeal = () => {
     mutationKey: ['deleteMeal'],
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userMeals'] });
+      queryClient.invalidateQueries({ queryKey: ['fetchMeal'] });
     },
   });
   return {
