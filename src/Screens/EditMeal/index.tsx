@@ -5,7 +5,7 @@ import { HomeStackParamList } from '@src/@types/navigation';
 import { Button } from '@src/Components/Button/Button';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowLeft, Save, Trash } from 'lucide-react-native';
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 import { useEffect, useState } from 'react';
@@ -15,10 +15,12 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { AlertCircle, CircleAlert, CircleCheck } from 'lucide-react-native';
 import { twMerge } from 'tailwind-merge';
 import { CreateMealFormSchema, CreateMealFormDTO } from '@src/types/schemas/CreateMealFormSchema';
-import { showErrorToast, showInfoToast } from '@src/Components/Toasts/Toasts';
+import { showErrorToast } from '@src/Components/Toasts/Toasts';
 import { formatTime } from '@src/Utils/formatters/formatTime';
 import { formatDate } from '@src/Utils/formatters/formatDate';
 import { UseFetchMeal } from '@src/Hooks/useFetchMeal';
+import { UseEditMeal } from '@src/Hooks/useEditMeal';
+import { EditMealRequestDTO } from '@src/types/dtos/Requests/EditMealRequest';
 
 const EditMeal = () => {
   const route = useRoute<RouteProp<HomeStackParamList, 'EditMeal'>>();
@@ -26,9 +28,10 @@ const EditMeal = () => {
     return null;
   }
   const { mealId } = route.params;
-  const { goBack } = useNavigation<NavigationProp<HomeStackParamList>>();
+  const { goBack, navigate } = useNavigation<NavigationProp<HomeStackParamList, 'DeleteMeal'>>();
 
   const [inDiet, setInDiet] = useState<boolean | null>(null);
+  const [date, setDate] = useState<Date | null>(null);
   const { data, fetchMealLoading } = UseFetchMeal({ mealId });
 
   const {
@@ -40,29 +43,42 @@ const EditMeal = () => {
     resolver: zodResolver(CreateMealFormSchema),
   });
 
-  const [date, setDate] = useState(new Date());
-  const onSubmit = (data: CreateMealFormDTO) => {};
+  const { editMeal, editMealError, editMealPending, editMealSuccess } = UseEditMeal();
+  const onSubmit = (formData: EditMealRequestDTO) => {
+    console.log(formData);
+    editMeal({
+      ...formData,
+      in_diet: formData.in_diet,
+    });
+  };
+
+  const onDelete = () => {
+    const name = data?.meal.name;
+    navigate('DeleteMeal', {
+      mealId: mealId,
+      mealName: data?.meal.name || '',
+    });
+  };
 
   const onError = (error: any) => {
     if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
     if (error.inDiet) showErrorToast('Error in form field in diet: ' + error.inDiet.message);
+    console.log(error);
   };
 
   const onChangeDate = (e: any, selectedDate: any) => {
     const currentDate = selectedDate;
-    setDate(currentDate);
+    if (currentDate) {
+      setDate(currentDate);
+      // Update both date and time form fields
+      setValue('date', currentDate);
+      setValue('time', currentDate);
+    }
   };
 
-  const showMode = (currentMode: any) => {
+  const showMode = (currentMode: 'date' | 'time') => {
     DateTimePickerAndroid.open({
-      value:
-        currentMode == 'date'
-          ? data?.meal.date
-            ? new Date(data.meal.date)
-            : date
-          : data?.meal.time
-            ? new Date(data.meal.time)
-            : date,
+      value: date || new Date(),
       onChange: onChangeDate,
       mode: currentMode,
       is24Hour: true,
@@ -78,10 +94,18 @@ const EditMeal = () => {
   };
 
   useEffect(() => {
-    if (data?.meal.in_diet != undefined) {
-      setInDiet(data?.meal.in_diet);
+    console.log(data?.meal);
+    if (data?.meal) {
+      const mealDate = new Date(data.meal.date);
+      setDate(mealDate);
+      setInDiet(data.meal.in_diet);
+      setValue('name', data.meal.name);
+      setValue('description', data.meal.description || '');
+      setValue('in_diet', data.meal.in_diet);
+      setValue('date', mealDate);
+      setValue('time', mealDate);
     }
-  }, [data?.meal.in_diet]);
+  }, [data?.meal, setValue]);
 
   return (
     <Animated.View className="flex-1">
@@ -134,27 +158,38 @@ const EditMeal = () => {
             />
             <View className="mb-4 flex flex-row justify-between gap-4">
               <View className="flex-1">
-                <TouchableOpacity onPress={showDatepicker}>
-                  <CustomTextInput
-                    labelText="Date"
-                    className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                    value={formatDate(date)}
-                    defaultValue={formatDate(data?.meal.date ?? new Date())}
-                    editable={false}
-                  />
-                </TouchableOpacity>
+                <Controller
+                  control={control}
+                  name="date"
+                  render={({ field: { value } }) => (
+                    <TouchableOpacity onPress={showDatepicker}>
+                      <CustomTextInput
+                        labelText="Date"
+                        className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                        value={value ? formatDate(value) : date ? formatDate(date) : ''}
+                        editable={false}
+                        errorMessage={errors.date?.message}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
               </View>
               <View className="flex-1">
-                <TouchableOpacity onPress={showTimepicker}>
-                  <CustomTextInput
-                    onChangeText={() => showInfoToast('Updated time')}
-                    labelText="Time"
-                    className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                    value={formatTime(date)}
-                    defaultValue={formatTime(data?.meal.time ?? new Date())}
-                    editable={false}
-                  />
-                </TouchableOpacity>
+                <Controller
+                  control={control}
+                  name="time"
+                  render={({ field: { value } }) => (
+                    <TouchableOpacity onPress={showTimepicker}>
+                      <CustomTextInput
+                        labelText="Time"
+                        className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                        value={value ? formatTime(value) : date ? formatTime(date) : ''}
+                        editable={false}
+                        errorMessage={errors.time?.message}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
               </View>
             </View>
             <Text className="mb-2 items-center justify-center font-nunito-bold text-mdi">
@@ -168,8 +203,8 @@ const EditMeal = () => {
                     inDiet === true ? 'border-2 border-green-500 bg-green-100' : 'bg-base-600'
                   )}
                   onPress={() => {
-                    setValue('inDiet', true);
                     setInDiet(true);
+                    setValue('in_diet', true);
                   }}>
                   <CircleCheck color={Colors.green[600]} />
                   <Text className="font-nunito-bold text-mdi">Yes</Text>
@@ -182,14 +217,14 @@ const EditMeal = () => {
                       : 'bg-base-600'
                   )}
                   onPress={() => {
-                    setValue('inDiet', false);
                     setInDiet(false);
+                    setValue('in_diet', false);
                   }}>
                   <CircleAlert color={Colors['brick-red'][600]} />
                   <Text className="font-nunito-bold text-mdi">No</Text>
                 </TouchableOpacity>
               </View>
-              {errors.inDiet?.message && (
+              {errors.in_diet?.message && (
                 <View className="mt-1 flex flex-row items-center gap-2">
                   <AlertCircle
                     width={16}
@@ -198,7 +233,7 @@ const EditMeal = () => {
                     strokeWidth={2}
                   />
                   <Text className="font-nunito-bold text-brick-red-500">
-                    {errors.inDiet?.message}
+                    {errors.in_diet?.message}
                   </Text>
                 </View>
               )}
@@ -206,14 +241,21 @@ const EditMeal = () => {
             <Button
               className="mt-8 w-full flex-row items-center justify-center rounded-lg bg-base-50 p-4"
               onPress={handleSubmit(onSubmit, onError)}>
-              <View className="mr-2">
-                <Save color={Colors.base[600]} strokeWidth={2} size={24} />
-              </View>
-              <Text className="font-nunito-bold text-lg text-base-700">Save changes</Text>
+              {editMealPending ? (
+                <ActivityIndicator color={Colors.base[600]} />
+              ) : (
+                <>
+                  <View className="mr-2">
+                    <Save color={Colors.base[600]} strokeWidth={2} size={24} />
+                  </View>
+                  <Text className="font-nunito-bold text-lg text-base-700">Save changes</Text>
+                </>
+              )}
             </Button>
             <Button
+              disabled={editMealPending}
               className="mt-4 w-full flex-row items-center justify-center rounded-lg bg-brick-red-500 p-4"
-              onPress={() => console.log('on delete')}>
+              onPress={onDelete}>
               <View className="mr-2">
                 <Trash color={Colors.base[600]} strokeWidth={3} size={24} />
               </View>

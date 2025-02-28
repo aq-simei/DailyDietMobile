@@ -1,7 +1,7 @@
 import { axiosInstance } from '../axios';
 import { EditMealRequestDTO } from '@src/types/dtos/Requests/EditMealRequest';
 
-export const EditMeal = (editMealRequestDTO: EditMealRequestDTO) => {
+export const EditMeal = async (editMealRequestDTO: EditMealRequestDTO) => {
   const body: Partial<EditMealRequestDTO> = {
     id: editMealRequestDTO.id,
     name: editMealRequestDTO.name,
@@ -11,6 +11,6 @@ export const EditMeal = (editMealRequestDTO: EditMealRequestDTO) => {
     date: editMealRequestDTO.date,
   };
 
-  const response = axiosInstance.post(`/meals/edit/${editMealRequestDTO.id}`, body);
-  return response;
+  const response = await axiosInstance.patch(`/meals/edit/${editMealRequestDTO.id}`, body);
+  return response.data;
 };
