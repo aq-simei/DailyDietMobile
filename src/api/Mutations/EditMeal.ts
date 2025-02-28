@@ -1,7 +1,7 @@
 import { axiosInstance } from '../axios';
 import { EditMealRequestDTO } from '@src/types/dtos/Requests/EditMealRequest';
 
-export const EditMeal = async (editMealRequestDTO: EditMealRequestDTO) => {
+export const editMeal = async (editMealRequestDTO: EditMealRequestDTO) => {
   const body: Partial<EditMealRequestDTO> = {
     id: editMealRequestDTO.id,
     name: editMealRequestDTO.name,
