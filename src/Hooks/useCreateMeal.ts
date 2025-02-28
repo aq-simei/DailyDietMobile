@@ -28,6 +28,7 @@ export const UseCreateMeal = (): UseCreateMealData => {
     onSuccess: () => {
       showSuccessToast('Meal created');
       queryClient.invalidateQueries({ queryKey: ['userMeals'] });
+      queryClient.invalidateQueries({ queryKey: ['userStats']})
       navigation.navigate('Home', { source: 'newMeal' });
     },
     onError: (error) => {
