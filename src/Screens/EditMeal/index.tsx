@@ -30,9 +30,10 @@ const EditMeal = () => {
   const { mealId } = route.params;
   const { goBack, navigate } = useNavigation<NavigationProp<HomeStackParamList, 'DeleteMeal'>>();
 
+  const { data, fetchMealLoading, fetchMealSuccess } = UseFetchMeal({ mealId });
   const [inDiet, setInDiet] = useState<boolean | null>(null);
-  const [date, setDate] = useState<Date | null>(null);
-  const { data, fetchMealLoading } = UseFetchMeal({ mealId });
+  const [date, setDate] = useState<Date | null>(data?.meal.date || null);
+  const [time, setTime] = useState<Date | null>(data?.meal.time || null);
 
   const {
     control,
@@ -45,9 +46,16 @@ const EditMeal = () => {
 
   const { editMeal, editMealError, editMealPending, editMealSuccess } = UseEditMeal();
   const onSubmit = (formData: EditMealRequestDTO) => {
+    if (date === null || time === null) {
+      showErrorToast('Please select a date and time');
+      return;
+    }
     editMeal({
       ...formData,
+      id: mealId,
       in_diet: formData.in_diet,
+      date: date,
+      time: time,
     });
   };
 
@@ -62,14 +70,13 @@ const EditMeal = () => {
   const onError = (error: any) => {
     if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
     if (error.inDiet) showErrorToast('Error in form field in diet: ' + error.inDiet.message);
-    console.log(error);
   };
 
   const onChangeDate = (e: any, selectedDate: any) => {
     const currentDate = selectedDate;
     if (currentDate) {
       setDate(currentDate);
-      // Update both date and time form fields
+      setTime(currentDate);
       setValue('date', currentDate);
       setValue('time', currentDate);
     }
@@ -93,17 +100,24 @@ const EditMeal = () => {
   };
 
   useEffect(() => {
-    if (data?.meal) {
+    if (data?.meal && fetchMealSuccess) {
       const mealDate = new Date(data.meal.date);
       setDate(mealDate);
+      setTime(mealDate);
       setInDiet(data.meal.in_diet);
+      setValue('date', mealDate);
+      setValue('time', mealDate);
       setValue('name', data.meal.name);
       setValue('description', data.meal.description || '');
       setValue('in_diet', data.meal.in_diet);
-      setValue('date', mealDate);
-      setValue('time', mealDate);
     }
-  }, [data?.meal, setValue]);
+
+    return () => {
+      setDate(null);
+      setTime(null);
+      setInDiet(null);
+    };
+  }, [data?.meal, mealId]);
 
   return (
     <Animated.View className="flex-1">
@@ -117,7 +131,7 @@ const EditMeal = () => {
             Editing {data?.meal.name}
           </Text>
         </View>
-        {fetchMealLoading ? (
+        {fetchMealLoading && data?.meal == undefined ? (
           <ActivityIndicator size="large" color={Colors.base[500]} />
         ) : (
           <Animated.View className="p-4" entering={FadeIn.duration(500)}>
@@ -156,38 +170,26 @@ const EditMeal = () => {
             />
             <View className="mb-4 flex flex-row justify-between gap-4">
               <View className="flex-1">
-                <Controller
-                  control={control}
-                  name="date"
-                  render={({ field: { value } }) => (
-                    <TouchableOpacity onPress={showDatepicker}>
-                      <CustomTextInput
-                        labelText="Date"
-                        className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                        value={value ? formatDate(value) : date ? formatDate(date) : ''}
-                        editable={false}
-                        errorMessage={errors.date?.message}
-                      />
-                    </TouchableOpacity>
-                  )}
-                />
+                <TouchableOpacity onPress={showDatepicker}>
+                  <CustomTextInput
+                    labelText="Date"
+                    className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md placeholder:text-base-50"
+                    value={date ? formatDate(date) : ''}
+                    editable={false}
+                    errorMessage={errors.date?.message}
+                  />
+                </TouchableOpacity>
               </View>
               <View className="flex-1">
-                <Controller
-                  control={control}
-                  name="time"
-                  render={({ field: { value } }) => (
-                    <TouchableOpacity onPress={showTimepicker}>
-                      <CustomTextInput
-                        labelText="Time"
-                        className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-                        value={value ? formatTime(value) : date ? formatTime(date) : ''}
-                        editable={false}
-                        errorMessage={errors.time?.message}
-                      />
-                    </TouchableOpacity>
-                  )}
-                />
+                <TouchableOpacity onPress={showTimepicker}>
+                  <CustomTextInput
+                    labelText="Time"
+                    className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md placeholder:text-base-50"
+                    value={time ? formatTime(time) : ''}
+                    editable={false}
+                    errorMessage={errors.time?.message}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
             <Text className="mb-2 items-center justify-center font-nunito-bold text-mdi">
