@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import CustomTextInput from '@src/Components/CustomTextInput/CustomTextInput';
 import { CreateMealFormSchema, CreateMealFormDTO } from '@src/types/schemas/CreateMealFormSchema';
 import { UseCreateMeal } from '@src/Hooks/useCreateMeal';
-import { showErrorToast, showInfoToast } from '@src/Components/Toasts/Toasts';
+import { showErrorToast } from '@src/Components/Toasts/Toasts';
 import { formatTime } from '@src/Utils/formatters/formatTime';
 import { formatDate } from '@src/Utils/formatters/formatDate';
 import { Colors } from '@src/Constants/Colors';
@@ -17,6 +17,7 @@ const Form = () => {
   const { createMeal, createMealPending } = UseCreateMeal();
   const [date, setDate] = useState(new Date());
   const [inDiet, setInDiet] = useState<boolean | null>(null);
+
   const {
     control,
     handleSubmit,
@@ -24,33 +25,54 @@ const Form = () => {
     formState: { errors },
   } = useForm<CreateMealFormDTO>({
     resolver: zodResolver(CreateMealFormSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      in_diet: undefined, // Remove default false to force user selection
+      date: new Date(),
+      time: new Date(),
+    },
+    mode: 'onBlur', // Validate on blur
   });
 
   const onSubmit = (data: CreateMealFormDTO) => {
     createMeal({
       description: data.description,
-      in_diet: data.inDiet,
+      in_diet: data.in_diet,
       name: data.name,
-      date: date,
-      time: date,
+      date: data.date,
+      time: data.time,
     });
   };
 
   const onError = (error: any) => {
-    if (error.name) showErrorToast('Error in form field name: ' + error.name.message);
-    if (error.inDiet) showErrorToast('Error in form field in diet: ' + error.inDiet.message);
+    console.log('Form errors:', error);
+    Object.keys(error).forEach((key) => {
+      showErrorToast(`${error[key].message}`);
+    });
   };
 
-  const onChangeDate = (e: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    setDate(currentDate);
-    showInfoToast('Updated date');
+  const onChangeDate = (currentMode: 'date' | 'time', selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      const newDate = new Date(selectedDate);
+      if (currentMode === 'date') {
+        const currentTime = date;
+        newDate.setHours(currentTime.getHours(), currentTime.getMinutes());
+        setDate(newDate);
+        setValue('date', newDate);
+      } else {
+        const currentDate = date;
+        currentDate.setHours(newDate.getHours(), newDate.getMinutes());
+        setDate(currentDate);
+        setValue('time', currentDate);
+      }
+    }
   };
 
-  const showMode = (currentMode: any) => {
+  const showMode = (currentMode: 'date' | 'time') => {
     DateTimePickerAndroid.open({
       value: date,
-      onChange: onChangeDate,
+      onChange: (_, selectedDate) => onChangeDate(currentMode, selectedDate),
       mode: currentMode,
       is24Hour: true,
     });
@@ -71,6 +93,7 @@ const Form = () => {
       <Controller
         control={control}
         name="name"
+        rules={{ required: true }}
         render={({ field: { onChange, onBlur, value } }) => (
           <CustomTextInput
             onChangeText={onChange}
@@ -86,6 +109,7 @@ const Form = () => {
       <Controller
         control={control}
         name="description"
+        rules={{ required: true }}
         render={({ field: { onChange, onBlur, value } }) => (
           <CustomTextInput
             onChangeText={onChange}
@@ -101,25 +125,38 @@ const Form = () => {
       />
       <View className="mb-4 flex flex-row justify-between gap-4">
         <View className="flex-1">
-          <TouchableOpacity onPress={showDatepicker}>
-            <CustomTextInput
-              labelText="Date"
-              className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-              value={formatDate(date)}
-              editable={false}
-            />
-          </TouchableOpacity>
+          <Controller
+            control={control}
+            name="date"
+            render={({ field: { value } }) => (
+              <TouchableOpacity onPress={showDatepicker}>
+                <CustomTextInput
+                  labelText="Date"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                  value={formatDate(value || date)}
+                  editable={false}
+                  errorMessage={errors.date?.message}
+                />
+              </TouchableOpacity>
+            )}
+          />
         </View>
         <View className="flex-1">
-          <TouchableOpacity onPress={showTimepicker}>
-            <CustomTextInput
-              onChangeText={() => showInfoToast('Updated time')}
-              labelText="Time"
-              className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
-              value={formatTime(date)}
-              editable={false}
-            />
-          </TouchableOpacity>
+          <Controller
+            control={control}
+            name="time"
+            render={({ field: { value } }) => (
+              <TouchableOpacity onPress={showTimepicker}>
+                <CustomTextInput
+                  labelText="Time"
+                  className="h-12 w-full rounded-md border-2 border-base-300 p-2 font-nunito-semibold text-md"
+                  value={formatTime(value || date)}
+                  editable={false}
+                  errorMessage={errors.time?.message}
+                />
+              </TouchableOpacity>
+            )}
+          />
         </View>
       </View>
       <Text className="mb-2 items-center justify-center font-nunito-bold text-mdi">
@@ -133,7 +170,7 @@ const Form = () => {
               inDiet === true ? 'border-2 border-green-500 bg-green-100' : 'bg-base-600'
             )}
             onPress={() => {
-              setValue('inDiet', true);
+              setValue('in_diet', true);
               setInDiet(true);
             }}>
             <CircleCheck color={Colors.green[600]} />
@@ -145,14 +182,14 @@ const Form = () => {
               inDiet === false ? 'border-2 border-brick-red-600 bg-brick-red-100' : 'bg-base-600'
             )}
             onPress={() => {
-              setValue('inDiet', false);
+              setValue('in_diet', false);
               setInDiet(false);
             }}>
             <CircleAlert color={Colors['brick-red'][600]} />
             <Text className="font-nunito-bold text-mdi">No</Text>
           </TouchableOpacity>
         </View>
-        {errors.inDiet?.message && (
+        {(errors.in_diet?.message || inDiet === null) && (
           <View className="mt-1 flex flex-row items-center gap-2">
             <AlertCircle
               width={16}
@@ -160,7 +197,9 @@ const Form = () => {
               stroke={Colors['brick-red']['500']}
               strokeWidth={2}
             />
-            <Text className="font-nunito-bold text-brick-red-500">{errors.inDiet?.message}</Text>
+            <Text className="font-nunito-bold text-brick-red-500">
+              {errors.in_diet?.message || 'Please select if meal is in diet'}
+            </Text>
           </View>
         )}
       </View>

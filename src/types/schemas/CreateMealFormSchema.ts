@@ -1,11 +1,20 @@
-import z from 'zod';
+import { z } from 'zod';
 
 export const CreateMealFormSchema = z.object({
-  name: z
-    .string({ message: 'Must provide a name' })
-    .max(20, { message: 'Name to long, keep it under 20 characters' }),
-  description: z.string().optional(),
-  inDiet: z.boolean({ message: 'must specify the meal type' }),
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().min(1, 'Description is required'),
+  date: z.date({
+    required_error: 'Date is required',
+    invalid_type_error: 'Invalid date format',
+  }),
+  time: z.date({
+    required_error: 'Time is required',
+    invalid_type_error: 'Invalid time format',
+  }),
+  in_diet: z.boolean({
+    required_error: 'Please select if meal is in diet',
+    invalid_type_error: 'Invalid selection',
+  }),
 });
 
 export type CreateMealFormDTO = z.infer<typeof CreateMealFormSchema>;

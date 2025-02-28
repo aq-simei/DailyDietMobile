@@ -89,13 +89,10 @@ describe('Form Component', () => {
 
       await waitFor(() => {
         // check toasts
-        expect(mockShowErrorToast).toHaveBeenCalledTimes(2);
-        expect(mockShowErrorToast).toHaveBeenCalledWith(
-          'Error in form field name: Must provide a name'
-        );
-        expect(mockShowErrorToast).toHaveBeenCalledWith(
-          'Error in form field in diet: must specify the meal type'
-        );
+        expect(mockShowErrorToast).toHaveBeenCalledTimes(3);
+        expect(mockShowErrorToast).toHaveBeenCalledWith('Name is required');
+        expect(mockShowErrorToast).toHaveBeenCalledWith('Please select if meal is in diet');
+        expect(mockShowErrorToast).toHaveBeenCalledWith('Description is required');
       });
     });
 
@@ -111,8 +108,8 @@ describe('Form Component', () => {
       fireEvent.press(getByText('Record new meal'));
 
       await waitFor(() => {
-        expect(getByText('Must provide a name')).toBeTruthy();
-        expect(getByText('must specify the meal type')).toBeTruthy();
+        expect(getByText('Name is required')).toBeTruthy();
+        expect(getByText('Please select if meal is in diet')).toBeTruthy();
       });
     });
   });
