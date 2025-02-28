@@ -45,7 +45,6 @@ const EditMeal = () => {
 
   const { editMeal, editMealError, editMealPending, editMealSuccess } = UseEditMeal();
   const onSubmit = (formData: EditMealRequestDTO) => {
-    console.log(formData);
     editMeal({
       ...formData,
       in_diet: formData.in_diet,
@@ -94,7 +93,6 @@ const EditMeal = () => {
   };
 
   useEffect(() => {
-    console.log(data?.meal);
     if (data?.meal) {
       const mealDate = new Date(data.meal.date);
       setDate(mealDate);

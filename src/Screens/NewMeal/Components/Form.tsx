@@ -46,7 +46,6 @@ const Form = () => {
   };
 
   const onError = (error: any) => {
-    console.log('Form errors:', error);
     Object.keys(error).forEach((key) => {
       showErrorToast(`${error[key].message}`);
     });
