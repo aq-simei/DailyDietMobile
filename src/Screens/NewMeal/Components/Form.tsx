@@ -188,7 +188,7 @@ const Form = () => {
             <Text className="font-nunito-bold text-mdi">No</Text>
           </TouchableOpacity>
         </View>
-        {(errors.in_diet?.message) && (
+        {(errors.in_diet?.message || inDiet === null) && (
           <View className="mt-1 flex flex-row items-center gap-2">
             <AlertCircle
               width={16}

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const CreateMealFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().min(1, 'Description is required'),
+  description: z.string().optional(),
   date: z.date({
     required_error: 'Date is required',
     invalid_type_error: 'Invalid date format',

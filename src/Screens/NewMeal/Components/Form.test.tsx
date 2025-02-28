@@ -89,10 +89,9 @@ describe('Form Component', () => {
 
       await waitFor(() => {
         // check toasts
-        expect(mockShowErrorToast).toHaveBeenCalledTimes(3);
+        expect(mockShowErrorToast).toHaveBeenCalledTimes(2);
         expect(mockShowErrorToast).toHaveBeenCalledWith('Name is required');
         expect(mockShowErrorToast).toHaveBeenCalledWith('Please select if meal is in diet');
-        expect(mockShowErrorToast).toHaveBeenCalledWith('Description is required');
       });
     });
 
