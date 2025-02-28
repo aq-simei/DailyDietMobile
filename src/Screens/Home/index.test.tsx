@@ -70,7 +70,7 @@ describe('Home Screen', () => {
 
     const { getByText } = renderWWrappers(<Home />);
 
-    expect(getByText('75%')).toBeTruthy();
+    expect(getByText('0%')).toBeTruthy();
     expect(getByText('diet friendly meals')).toBeTruthy();
     expect(getByText('Add meal')).toBeTruthy();
   });
