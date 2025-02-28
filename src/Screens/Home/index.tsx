@@ -23,10 +23,12 @@ import { MealCard } from '@src/Components/MealCard/MealCard';
 import { MealsHeader } from '@src/Components/MealsHeader/MealsHeader';
 import { useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
+import { useUserStats } from '@src/Hooks/useUserStats';
 
 const Home = () => {
   const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
   const { data, isLoading, refetch } = UseFetchUserMeals();
+  const { userStats } = useUserStats();
   const { params = { refreshData: false } } = useRoute<RouteProp<HomeStackParamList, 'Home'>>();
   const source = params?.source;
 
@@ -55,11 +57,14 @@ const Home = () => {
     );
   }, []);
 
+  // refetch in case of coming from a screen that changes data
   useEffect(() => {
     if (params?.refreshData) {
       refetch();
     }
   }, [params?.refreshData]);
+
+  const percentage = (userStats.inDietMeals / userStats.registeredMeals) * 100;
 
   const renderItem = ({ item }: { item: MealListItem }) => {
     if (item.type === 'header') {
@@ -79,13 +84,23 @@ const Home = () => {
         <Card>
           <Card.Header className="relative">
             <Card.Header.Right>
-              <TouchableOpacity onPress={() => navigate('Overview')} className="rounded-full p-2">
+              <TouchableOpacity
+                onPress={() =>
+                  navigate('Overview', {
+                    currentStreak: userStats.currentStreak,
+                    inDietMeals: userStats.inDietMeals,
+                    junkMeals: userStats.registeredMeals - userStats.inDietMeals,
+                    maxStreak: userStats.maxStreak,
+                    totalMeals: userStats.registeredMeals,
+                  })
+                }
+                className="rounded-full p-2">
                 <ArrowUpRight color={Colors.green[500]} />
               </TouchableOpacity>
             </Card.Header.Right>
           </Card.Header>
           <Card.Content>
-            <Text className="font-nunito-bold text-lg">75%</Text>
+            <Text className="font-nunito-bold text-lg">{isNaN(percentage) ? 0 : percentage.toFixed(2)}%</Text>
             <Text className="font-nunito text-md">diet friendly meals</Text>
           </Card.Content>
         </Card>
@@ -113,6 +128,14 @@ const Home = () => {
             testID="flash-list"
             data={data}
             renderItem={renderItem}
+            ListEmptyComponent={
+              <View className="flex w-full items-center justify-center">
+                <Text className="font-nunito-bold text-lg text-base-200">No meals found</Text>
+                <Text className="font-nunito-bold text-lg text-base-200">
+                  Register a new meal to start
+                </Text>
+              </View>
+            }
             estimatedItemSize={80}
             ListHeaderComponent={<MealsHeader />}
             contentContainerStyle={{ paddingTop: 14, paddingBottom: 56 }}

@@ -14,7 +14,13 @@ type HomeStackParamList = {
     source?: 'overview' | 'newMeal' | 'editMeal' | 'auth';
     refreshData?: boolean;
   };
-  Overview: undefined;
+  Overview: {
+    totalMeals: number;
+    inDietMeals: number;
+    currentStreak: number;
+    maxStreak: number;
+    junkMeals: number;
+  };
   NewMeal: undefined;
   EditMeal: { mealId: string };
   DeleteMeal: {

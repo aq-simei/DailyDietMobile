@@ -90,9 +90,7 @@ const MealCard: React.FC<MealListItemProps> = ({ meal, onDeleteRequest }) => {
   return (
     <View {...panResponder.panHandlers} style={{ position: 'relative' }}>
       <Animated.View style={[[animatedCardStyle], { justifyContent: 'center' }]}>
-        <TouchableOpacity
-          className="m-2 flex h-16 flex-row items-center justify-center rounded-xl border border-base-300 p-4"
-          onPress={() => navigate('EditMeal', { mealId: meal.id })}>
+        <View className="m-2 flex h-16 flex-row items-center justify-center rounded-xl border border-base-300 p-4">
           <Text className="px-2 font-nunito-bold">{formatTime(meal.time)}</Text>
           <Text className="flex-1 font-nunito-semibold">
             <Text className="font-nunito-bold text-base-400">| </Text>
@@ -105,7 +103,7 @@ const MealCard: React.FC<MealListItemProps> = ({ meal, onDeleteRequest }) => {
               <CircleAlert color={Colors['brick-red'][400]} size={16} />
             )}
           </Text>
-        </TouchableOpacity>
+        </View>
       </Animated.View>
       <Animated.View
         className="absolute left-0 top-2 flex h-16 w-auto flex-row items-center justify-center gap-2 rounded-lg bg-green-800"
