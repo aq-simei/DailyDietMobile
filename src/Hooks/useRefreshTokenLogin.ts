@@ -24,18 +24,19 @@ export const useRefreshTokenLogin = ({
     mutationFn: ({ refresh_token }: RefreshTokenLoginDTO) => refreshTokenLogin({ refresh_token }),
     onSuccess: (data) => {
       onSuccessCallback();
-       SecureStorage.setItem('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
+      SecureStorage.setItem('DAILY_DIET_REFRESH_TOKEN', data.refresh_token);
       if (data !== undefined) {
         // put bearer token on the axios instance
         axiosInstance.interceptors.request.use((config) => {
           config.headers['Authorization'] = `Bearer ${data.jwt_token}`;
           return config;
         });
+        // Store user ID directly in axios instance
+        axiosInstance.userId = data.user_id;
       }
     },
     onError: (e) => {
       onErrorCallback();
-      console.log(e);
     },
   });
 
